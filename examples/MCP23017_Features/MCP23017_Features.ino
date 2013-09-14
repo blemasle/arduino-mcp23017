@@ -1,3 +1,4 @@
+#include <Wire.h>
 #include <MCP23017.h>
 
 void setup()
