@@ -43,11 +43,20 @@ enum MCP2307_REGISTER
 class MCP23017
 {
 private:
+	void writeBoth(MCP2307_REGISTER reg, byte value);
+	void writeRegister(MCP2307_REGISTER reg, byte portA, byte portB);
+	short readRegister(MCP2307_REGISTER reg);
 public:
 	MCP23017(byte addr);
 	~MCP23017();
 	void init(MCP23017_INTMODE interruptMode);
-	void setIODir(byte portA, byte portB);
+	void pinMode(byte portA, byte portB);
+	void write(short value);
+	void write(byte portA, byte portB);
+	short read();
+	void read(byte* portA, byte* portB);
+	void digitalWrite(byte pin, byte state);
+	byte digitalRead(byte pin);
 };
 
 #endif
