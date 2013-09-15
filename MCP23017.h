@@ -14,7 +14,8 @@ enum MCP23017_INTMODE
 	OR = 0b01000000
 };
 
-enum MCP2307_REGISTER
+//register for BANK = 0
+enum MCP23017_REGISTER
 {
 	IODIRA		= 0x00,
 	IODIRB		= 0x01,
@@ -27,7 +28,7 @@ enum MCP2307_REGISTER
 	INTCONA		= 0x08,
 	INTCONB		= 0x09,
 	IOCON		= 0x0A,
-	//IODIRB		= 0x0B,
+	//IOCONB		= 0x0B,
 	GPPUA		= 0x0C,
 	GPPUB		= 0x0D,
 	INTFA		= 0x0E,
@@ -43,18 +44,25 @@ enum MCP2307_REGISTER
 class MCP23017
 {
 private:
-	void writeBoth(MCP2307_REGISTER reg, byte value);
-	void writeRegister(MCP2307_REGISTER reg, byte portA, byte portB);
-	short readRegister(MCP2307_REGISTER reg);
+	void writeBothRegister(MCP23017_REGISTER reg, byte value);
+	void writeRegister(MCP23017_REGISTER reg, byte portA, byte portB);
+	void writeRegister(MCP23017_REGISTER reg, byte value);
+
+	byte readRegister(MCP23017_REGISTER reg);
+	short readBothRegister(MCP23017_REGISTER reg);
+	
 public:
 	MCP23017(byte addr);
 	~MCP23017();
 	void init(MCP23017_INTMODE interruptMode);
 	void pinMode(byte portA, byte portB);
+
 	void write(short value);
 	void write(byte portA, byte portB);
+
 	short read();
 	void read(byte* portA, byte* portB);
+
 	void digitalWrite(byte pin, byte state);
 	byte digitalRead(byte pin);
 };
