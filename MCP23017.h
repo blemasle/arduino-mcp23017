@@ -1,6 +1,8 @@
 #ifndef _MCP23017_h
 #define _MCP23017_h
 
+#define _MCP23017_INTERRUPT_SUPPORT_
+
 #if defined(ARDUINO) && ARDUINO >= 100
 #include "Arduino.h"
 #else
@@ -41,30 +43,42 @@ enum MCP23017_REGISTER
 	OLATB		= 0x15,
 };
 
+inline MCP23017_REGISTER operator+(MCP23017_REGISTER a, byte b) {
+	return static_cast<MCP23017_REGISTER>(static_cast<int>(a) + b);
+};
+
 class MCP23017
 {
 private:
-	void writeBothRegister(MCP23017_REGISTER reg, byte value);
-	void writeRegister(MCP23017_REGISTER reg, byte portA, byte portB);
-	void writeRegister(MCP23017_REGISTER reg, byte value);
-
-	byte readRegister(MCP23017_REGISTER reg);
-	short readBothRegister(MCP23017_REGISTER reg);
-	
 public:
 	MCP23017(byte addr);
 	~MCP23017();
-	void init(MCP23017_INTMODE interruptMode);
-	void pinMode(byte portA, byte portB);
-
-	void write(short value);
-	void write(byte portA, byte portB);
-
-	short read();
-	void read(byte* portA, byte* portB);
+	void init();
+	void portMode(byte port, byte value);
+	void pinMode(byte pin, byte mode);
 
 	void digitalWrite(byte pin, byte state);
 	byte digitalRead(byte pin);
+
+	void writePort(byte port, byte value);
+	void write(short value);
+
+	byte readPort(byte port);
+	short read();
+
+	void writeRegister(MCP23017_REGISTER reg, byte value);
+	void writeRegister(MCP23017_REGISTER reg, byte portA, byte portB);
+	byte readRegister(MCP23017_REGISTER reg);
+	void readRegister(MCP23017_REGISTER reg, byte* portA, byte* portB);
+
+#ifdef _MCP23017_INTERRUPT_SUPPORT_
+	void interruptMode(MCP23017_INTMODE intMode);
+	void interrupt(byte port, byte mode);
+	void disableInterrupt(byte port);
+	void interruptedBy(byte* portA, byte* portB);
+	void clearInterrupts();
+	void clearInterrupts(byte* portA, byte* portB);
+#endif
 };
 
 #endif
