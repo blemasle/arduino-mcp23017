@@ -69,15 +69,15 @@ public:
 	void writeRegister(MCP23017_REGISTER reg, byte value);
 	void writeRegister(MCP23017_REGISTER reg, byte portA, byte portB);
 	byte readRegister(MCP23017_REGISTER reg);
-	void readRegister(MCP23017_REGISTER reg, byte* portA, byte* portB);
+	void readRegister(MCP23017_REGISTER reg, byte& portA, byte& portB);
 
 #ifdef _MCP23017_INTERRUPT_SUPPORT_
 	void interruptMode(MCP23017_INTMODE intMode);
 	void interrupt(byte port, byte mode);
 	void disableInterrupt(byte port);
-	void interruptedBy(byte* portA, byte* portB);
+	void interruptedBy(byte& portA, byte& portB);
 	void clearInterrupts();
-	void clearInterrupts(byte* portA, byte* portB);
+	void clearInterrupts(byte& portA, byte& portB);
 #endif
 };
 

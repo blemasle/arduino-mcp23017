@@ -127,14 +127,14 @@ byte MCP23017::readRegister(MCP23017_REGISTER reg)
 	return Wire.read();
 }
 
-void MCP23017::readRegister(MCP23017_REGISTER reg, byte* portA, byte* portB)
+void MCP23017::readRegister(MCP23017_REGISTER reg, byte& portA, byte& portB)
 {
 	Wire.beginTransmission(_addr);
 	Wire.write(reg);
 	Wire.endTransmission();
 	Wire.requestFrom(_addr, (byte)2);
-	*portA = Wire.read();
-	*portB = Wire.read();
+	portA = Wire.read();
+	portB = Wire.read();
 }
 
 #ifdef _MCP23017_INTERRUPT_SUPPORT_
@@ -174,7 +174,7 @@ void MCP23017::interrupt(byte port, byte mode)
 	}
 }
 
-void MCP23017::interruptedBy(byte* portA, byte* portB)
+void MCP23017::interruptedBy(byte& portA, byte& portB)
 {
 	readRegister(INTFA, portA, portB);
 }
@@ -190,7 +190,7 @@ void MCP23017::clearInterrupts()
 	clearInterrupts(&a, &b);
 }
 
-void MCP23017::clearInterrupts(byte* portA, byte* portB)
+void MCP23017::clearInterrupts(byte& portA, byte& portB)
 {
 	readRegister(INTCAPA, portA, portB);
 }

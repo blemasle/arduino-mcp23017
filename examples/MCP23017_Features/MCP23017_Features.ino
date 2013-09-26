@@ -169,10 +169,10 @@ void loop()
 		delay(100);
 		interrupted = false;
 		Serial.print("interrupt");
-		_mcp.interruptedBy(&a, &b);
+		_mcp.interruptedBy(a, b);
 		byte captureA, captureB;
 		byte currentB;
-		_mcp.clearInterrupts(&captureA, &captureB);
+		_mcp.clearInterrupts(captureA, captureB);
 		currentB = _mcp.readPort(1);
 
 		if((b & ~currentB) == (b & ~captureB))
