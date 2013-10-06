@@ -1,9 +1,7 @@
 #include "MCP23017.h"
 
-byte _addr;
-
 MCP23017::MCP23017(byte addr) {
-	_addr = addr;
+	_deviceAddr = addr;
 }
 
 MCP23017::~MCP23017() {}
@@ -102,7 +100,7 @@ short MCP23017::read()
 
 void MCP23017::writeRegister(MCP23017_REGISTER reg, byte value)
 {
-	Wire.beginTransmission(_addr);
+	Wire.beginTransmission(_deviceAddr);
 	Wire.write(reg);
 	Wire.write(value);
 	Wire.endTransmission();
@@ -110,7 +108,7 @@ void MCP23017::writeRegister(MCP23017_REGISTER reg, byte value)
 
 void MCP23017::writeRegister(MCP23017_REGISTER reg, byte portA, byte portB)
 {
-	Wire.beginTransmission(_addr);
+	Wire.beginTransmission(_deviceAddr);
 	Wire.write(reg);
 	Wire.write(portA);
 	Wire.write(portB);
@@ -120,19 +118,19 @@ void MCP23017::writeRegister(MCP23017_REGISTER reg, byte portA, byte portB)
 
 byte MCP23017::readRegister(MCP23017_REGISTER reg)
 {
-	Wire.beginTransmission(_addr);
+	Wire.beginTransmission(_deviceAddr);
 	Wire.write(reg);
 	Wire.endTransmission();
-	Wire.requestFrom(_addr, (byte)1);
+	Wire.requestFrom(_deviceAddr, (byte)1);
 	return Wire.read();
 }
 
 void MCP23017::readRegister(MCP23017_REGISTER reg, byte& portA, byte& portB)
 {
-	Wire.beginTransmission(_addr);
+	Wire.beginTransmission(_deviceAddr);
 	Wire.write(reg);
 	Wire.endTransmission();
-	Wire.requestFrom(_addr, (byte)2);
+	Wire.requestFrom(_deviceAddr, (byte)2);
 	portA = Wire.read();
 	portB = Wire.read();
 }
@@ -187,7 +185,7 @@ void MCP23017::disableInterrupt(byte port)
 void MCP23017::clearInterrupts()
 {
 	byte a, b;
-	clearInterrupts(&a, &b);
+	clearInterrupts(a, b);
 }
 
 void MCP23017::clearInterrupts(byte& portA, byte& portB)

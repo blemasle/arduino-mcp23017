@@ -50,6 +50,7 @@ inline MCP23017_REGISTER operator+(MCP23017_REGISTER a, byte b) {
 class MCP23017
 {
 private:
+	byte _deviceAddr;
 public:
 	MCP23017(byte addr);
 	~MCP23017();

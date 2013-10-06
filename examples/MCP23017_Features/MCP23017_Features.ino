@@ -1,6 +1,7 @@
 #include <Wire.h>
 #include <MCP23017.h>
 
+#define _MCP23017_INTERRUPT_SUPPORT_
 
 #define MCP23017_ADDR 0x20
 MCP23017 _mcp = MCP23017(MCP23017_ADDR);
