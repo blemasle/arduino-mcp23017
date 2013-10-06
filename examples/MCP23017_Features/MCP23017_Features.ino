@@ -23,7 +23,8 @@ void setup()
 	_mcp.init();
 
 	//port A => output, portB => input
-	_mcp.pinMode(0b00000000, 0b11111111);
+	_mcp.portMode(0, 0);
+	_mcp.portMode(1, 0b11111111);
 	//interrupt on portB on both pin, defValue = HIGH
 	_mcp.interruptMode(OR);
 	_mcp.interrupt(1, FALLING);
@@ -138,8 +139,13 @@ void setup()
 	Serial.print(conf, BIN);
 	Serial.println();
 
-	//ligthDemo();
-//	attachInterrupt(0, userInput2, RISING);
+	_mcp.writeRegister(GPIOA, 0xFF);
+	_mcp.writeRegister(GPIOB, 0xFF);
+	conf = _mcp.readRegister(GPIOA);
+	Serial.print("GPIOA : ");
+	Serial.print(conf, BIN);
+	Serial.println();
+	ligthDemo();
 	_mcp.clearInterrupts();
 	attachInterrupt(1, userInput, FALLING);
 }
