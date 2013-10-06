@@ -8,7 +8,7 @@ MCP23017 _mcp = MCP23017(MCP23017_ADDR);
 
 short _oldinput;
 
-volatile bool interrupted = true;
+volatile bool interrupted = false;
 unsigned long m;
 
 void userInput()
@@ -22,130 +22,23 @@ void setup()
 	Serial.begin(115200);
 	_mcp.init();
 
-	//port A => output, portB => input
+	//portA => output
 	_mcp.portMode(0, 0);
+	//port B => input
 	_mcp.portMode(1, 0b11111111);
 	//interrupt on portB on both pin, defValue = HIGH
 	_mcp.interruptMode(OR);
 	_mcp.interrupt(1, FALLING);
 
-	byte conf = _mcp.readRegister(IODIRA);
-	Serial.print("IODIRA : ");
-	Serial.print(conf, BIN);
-	Serial.println();
-	
-	conf = _mcp.readRegister(IODIRB);
-	Serial.print("IODIRB : ");
-	Serial.print(conf, BIN);
-	Serial.println();
+	_mcp.debug();
 
-	conf = _mcp.readRegister(IPOLA);
-	Serial.print("IPOLA : ");
-	Serial.print(conf, BIN);
-	Serial.println();
-
-	conf = _mcp.readRegister(IPOLB);
-	Serial.print("IPOLB : ");
-	Serial.print(conf, BIN);
-	Serial.println();
-
-	conf = _mcp.readRegister(GPINTENA);
-	Serial.print("GPINTENA : ");
-	Serial.print(conf, BIN);
-	Serial.println();
-
-	conf = _mcp.readRegister(GPINTENB);
-	Serial.print("GPINTENB : ");
-	Serial.print(conf, BIN);
-	Serial.println();
-
-	conf = _mcp.readRegister(DEFVALA);
-	Serial.print("DEFVALA : ");
-	Serial.print(conf, BIN);
-	Serial.println();
-
-	conf = _mcp.readRegister(DEFVALB);
-	Serial.print("DEFVALB : ");
-	Serial.print(conf, BIN);
-	Serial.println();
-
-	conf = _mcp.readRegister(INTCONA);
-	Serial.print("INTCONA : ");
-	Serial.print(conf, BIN);
-	Serial.println();
-
-	conf = _mcp.readRegister(INTCONB);
-	Serial.print("INTCONB : ");
-	Serial.print(conf, BIN);
-	Serial.println();
-
-	conf = _mcp.readRegister(IOCON);
-	Serial.print("IOCON : ");
-	Serial.print(conf, BIN);
-	Serial.println();
-
-	//conf = _mcp.readRegister(IOCONB);
-	//Serial.print("IOCONB : ");
-	//Serial.print(conf, BIN);
-	//Serial.println();
-
-	conf = _mcp.readRegister(GPPUA);
-	Serial.print("GPPUA : ");
-	Serial.print(conf, BIN);
-	Serial.println();
-
-	conf = _mcp.readRegister(GPPUB);
-	Serial.print("GPPUB : ");
-	Serial.print(conf, BIN);
-	Serial.println();
-
-	conf = _mcp.readRegister(INTFA);
-	Serial.print("INTFA : ");
-	Serial.print(conf, BIN);
-	Serial.println();
-
-	conf = _mcp.readRegister(INTFB);
-	Serial.print("INTFB : ");
-	Serial.print(conf, BIN);
-	Serial.println();
-
-	conf = _mcp.readRegister(INTCAPA);
-	Serial.print("INTCAPA : ");
-	Serial.print(conf, BIN);
-	Serial.println();
-
-	conf = _mcp.readRegister(INTCAPB);
-	Serial.print("INTCAPB : ");
-	Serial.print(conf, BIN);
-	Serial.println();
-
-	conf = _mcp.readRegister(GPIOA);
+	_mcp.writeRegister(GPIOA, 0x00);
+	_mcp.writeRegister(GPIOB, 0x00);
+	byte conf = _mcp.readRegister(GPIOA);
 	Serial.print("GPIOA : ");
 	Serial.print(conf, BIN);
 	Serial.println();
-
-	conf = _mcp.readRegister(GPIOB);
-	Serial.print("GPIOB : ");
-	Serial.print(conf, BIN);
-	Serial.println();
-
-	conf = _mcp.readRegister(OLATA);
-	Serial.print("OLATA : ");
-	Serial.print(conf, BIN);
-	Serial.println();
-
-	conf = _mcp.readRegister(OLATB);
-	Serial.print("OLATB : ");
-	Serial.print(conf, BIN);
-	Serial.println();
-
-	_mcp.writeRegister(GPIOA, 0xFF);
-	_mcp.writeRegister(GPIOB, 0xFF);
-	conf = _mcp.readRegister(GPIOA);
-	Serial.print("GPIOA : ");
-	Serial.print(conf, BIN);
-	Serial.println();
-	ligthDemo();
+	//ligthDemo();
 	_mcp.clearInterrupts();
 	attachInterrupt(1, userInput, FALLING);
 }

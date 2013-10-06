@@ -54,6 +54,9 @@ private:
 public:
 	MCP23017(byte addr);
 	~MCP23017();
+#ifdef _DEBUG
+	void debug();
+#endif
 	void init();
 	void portMode(byte port, byte value);
 	void pinMode(byte pin, byte mode);
