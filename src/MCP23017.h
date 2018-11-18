@@ -1,14 +1,9 @@
-#ifndef _MCP23017_h
-#define _MCP23017_h
+#pragma once
+
+#include <Arduino.h>
+#include <Wire.h>
 
 #define _MCP23017_INTERRUPT_SUPPORT_
-
-#if defined(ARDUINO) && ARDUINO >= 100
-#include "Arduino.h"
-#else
-#include "WProgram.h"
-#endif
-#include <Wire.h>
 
 enum MCP23017_INTMODE
 {
@@ -84,5 +79,3 @@ public:
 	void clearInterrupts(byte& portA, byte& portB);
 #endif
 };
-
-#endif
