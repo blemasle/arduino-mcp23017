@@ -8,13 +8,13 @@ MCP23017::~MCP23017() {}
 
 void MCP23017::init()
 {
-	//BANK = 0 : sequential register addresses
-	//MIRROR = 0, use configureInterrupt 
-	//SEQOP = 1 : sequential operation disabled, address pointer does not increment
-	//DISSLW = 0 : slew rate enabled
-	//HAEN = 0 : hardware address pin always enabled on 23017
-	//ODR = 0 : open drain output
-	//INTPOL = 0 : interuppt active low
+	//BANK = 	0 : sequential register addresses
+	//MIRROR = 	0 : use configureInterrupt 
+	//SEQOP = 	1 : sequential operation disabled, address pointer does not increment
+	//DISSLW = 	0 : slew rate enabled
+	//HAEN = 	0 : hardware address pin is always enabled on 23017
+	//ODR = 	0 : open drain output
+	//INTPOL = 	0 : interrupt active low
 	writeRegister(IOCON, 0b00100000);
 
 	//enable all pull up resistors (will be effective for input pins only)
