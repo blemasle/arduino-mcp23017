@@ -5,11 +5,17 @@
 
 #define _MCP23017_INTERRUPT_SUPPORT_ ///< Enables support for MCP23017 interrupts.
 
+enum class MCP23017_PORT : uint8_t
+{
+	A = 0,
+	B = 1
+};
+
 /**
  * Controls if the two interrupt pins mirror each other.
  * See "3.6 Interrupt Logic".
  */
-enum MCP23017_INTMODE
+enum class MCP23017_INTMODE : uint8_t
 {
 	SEPARATED = 0,	///< Interrupt pins are kept independent
 	OR = 0b01000000	///< Interrupt pins are mirrored
@@ -20,7 +26,7 @@ enum MCP23017_INTMODE
  * The library use addresses for IOCON.BANK = 0.
  * See "3.2.1 Byte mode and Sequential mode".
  */
-enum MCP23017_REGISTER
+enum class MCP23017_REGISTER : uint8_t
 {
 	IODIRA		= 0x00, 		///< Controls the direction of the data I/O for port A.
 	IODIRB		= 0x01,			///< Controls the direction of the data I/O for port B.
@@ -45,19 +51,19 @@ enum MCP23017_REGISTER
 	OLATB		= 0x15,			///< Provides access to the port B output latches.
 };
 
-inline MCP23017_REGISTER operator+(MCP23017_REGISTER a, byte b) {
-	return static_cast<MCP23017_REGISTER>(static_cast<int>(a) + b);
+inline MCP23017_REGISTER operator+(MCP23017_REGISTER a, MCP23017_PORT b) {
+	return static_cast<MCP23017_REGISTER>(static_cast<uint8_t>(a) + static_cast<uint8_t>(b));
 };
 
 class MCP23017
 {
 private:
-	byte _deviceAddr;
+	uint8_t _deviceAddr;
 public:
 	/**
 	 * Instantiates a new instance to interact with a MCP23017 at the specified address.
 	 */
-	MCP23017(byte addr);
+	MCP23017(uint8_t address);
 	~MCP23017();
 #ifdef _DEBUG
 	void debug();
@@ -78,7 +84,7 @@ public:
 	 * 
 	 * See "3.5.1 I/O Direction register".
 	 */
-	void portMode(byte port, byte value);
+	void portMode(MCP23017_PORT port, uint8_t value);
 	/**
 	 * Controls a single pin direction. 
 	 * Pin 0-7 for port A, 8-15 fo port B.
@@ -88,7 +94,7 @@ public:
 	 *
 	 * See "3.5.1 I/O Direction register".
 	 */
-	void pinMode(byte pin, byte mode);
+	void pinMode(uint8_t pin, uint8_t mode);
 
 	/**
 	 * Writes a single pin state.
@@ -99,7 +105,7 @@ public:
 	 * 
 	 * See "3.5.10 Port register".
 	 */
-	void digitalWrite(byte pin, byte state);
+	void digitalWrite(uint8_t pin, uint8_t state);
 	/**
 	 * Reads a single pin state.
 	 * Pin 0-7 for port A, 8-15 for port B.
@@ -109,7 +115,7 @@ public:
 	 * 
 	 * See "3.5.10 Port register".
 	 */ 
-	byte digitalRead(byte pin);
+	uint8_t digitalRead(uint8_t pin);
 
 	/**
 	 * Writes pins state to a whole port.
@@ -119,7 +125,7 @@ public:
 	 * 
 	 * See "3.5.10 Port register".
 	 */
-	void writePort(byte port, byte value);
+	void writePort(MCP23017_PORT port, uint8_t value);
 	/**
 	 * Writes pins state to both ports.
 	 * 
@@ -128,7 +134,7 @@ public:
 	 * 
 	 * See "3.5.10 Port register".
 	 */
-	void write(short value);
+	void write(uint16_t value);
 
 	/**
 	 * Reads pins state for a whole port.
@@ -138,7 +144,7 @@ public:
 	 * 
 	 * See "3.5.10 Port register".
 	 */
-	byte readPort(byte port);
+	uint8_t readPort(MCP23017_PORT port);
 	/**
 	 * Reads pins state for both ports. 
 	 * 
@@ -147,12 +153,12 @@ public:
 	 * 
 	 * See "3.5.10 Port register".
 	 */
-	short read();
+	uint16_t read();
 
 	/**
 	 * Writes a single register value.
 	 */
-	void writeRegister(MCP23017_REGISTER reg, byte value);
+	void writeRegister(MCP23017_REGISTER reg, uint8_t value);
 	/**
 	 * Writes values to a register pair.
 	 * 
@@ -160,11 +166,11 @@ public:
 	 * you have to supply a portA register address to reg. Otherwise, values
 	 * will be reversed due to the way the MCP23017 works in Byte mode.
 	 */
-	void writeRegister(MCP23017_REGISTER reg, byte portA, byte portB);
+	void writeRegister(MCP23017_REGISTER reg, uint8_t portA, uint8_t portB);
 	/**
 	 * Reads a single register value.
 	 */
-	byte readRegister(MCP23017_REGISTER reg);
+	uint8_t readRegister(MCP23017_REGISTER reg);
 	/**
 	 * Reads the values from a register pair.
 	 * 
@@ -172,7 +178,7 @@ public:
 	 * you have to supply a portA register address to reg. Otherwise, values
 	 * will be reversed due to the way the MCP23017 works in Byte mode.
 	 */
-	void readRegister(MCP23017_REGISTER reg, byte& portA, byte& portB);
+	void readRegister(MCP23017_REGISTER reg, uint8_t& portA, uint8_t& portB);
 
 #ifdef _MCP23017_INTERRUPT_SUPPORT_
 
@@ -189,15 +195,15 @@ public:
 	 * Configures interrupt registers using an Arduino-like API.
 	 * mode can be one of CHANGE, FALLING or RISING.
 	 */
-	void interrupt(byte port, byte mode);
+	void interrupt(MCP23017_PORT port, uint8_t mode);
 	/**
 	 * Disable interrupts for the specified port.
 	 */
-	void disableInterrupt(byte port);
+	void disableInterrupt(MCP23017_PORT port);
 	/**
 	 * Reads which pin caused the interrupt.
 	 */
-	void interruptedBy(byte& portA, byte& portB);
+	void interruptedBy(uint8_t& portA, uint8_t& portB);
 	/**
 	 * Clears interrupts on both ports.
 	 */
@@ -205,7 +211,7 @@ public:
 	/**
 	 * Clear interrupts on both ports. Returns port values at the time the interrupt occured.
 	 */
-	void clearInterrupts(byte& portA, byte& portB);
+	void clearInterrupts(uint8_t& portA, uint8_t& portB);
 
 #endif
 };

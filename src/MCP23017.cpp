@@ -1,6 +1,6 @@
 #include "MCP23017.h"
 
-MCP23017::MCP23017(byte addr) {
+MCP23017::MCP23017(uint8_t addr) {
 	_deviceAddr = addr;
 }
 
@@ -15,24 +15,24 @@ void MCP23017::init()
 	//HAEN = 	0 : hardware address pin is always enabled on 23017
 	//ODR = 	0 : open drain output
 	//INTPOL = 	0 : interrupt active low
-	writeRegister(IOCON, 0b00100000);
+	writeRegister(MCP23017_REGISTER::IOCON, 0b00100000);
 
 	//enable all pull up resistors (will be effective for input pins only)
-	writeRegister(GPPUA, 0xFF, 0xFF);
+	writeRegister(MCP23017_REGISTER::GPPUA, 0xFF, 0xFF);
 }
 
-void MCP23017::portMode(byte port, byte value)
+void MCP23017::portMode(MCP23017_PORT port, uint8_t value)
 {
-	writeRegister(IODIRA + port, value);
+	writeRegister(MCP23017_REGISTER::IODIRA + port, value);
 }
 
-void MCP23017::pinMode(byte pin, byte mode)
+void MCP23017::pinMode(uint8_t pin, uint8_t mode)
 {
-	MCP23017_REGISTER iodirreg = IODIRA;
-	byte iodir;
+	MCP23017_REGISTER iodirreg = MCP23017_REGISTER::IODIRA;
+	uint8_t iodir;
 	if(pin > 7)
 	{
-		iodirreg = IODIRB;
+		iodirreg = MCP23017_REGISTER::IODIRB;
 		pin -= 8;
 	}
 
@@ -43,13 +43,13 @@ void MCP23017::pinMode(byte pin, byte mode)
 	writeRegister(iodirreg, iodir);
 }
 
-void MCP23017::digitalWrite(byte pin, byte state)
+void MCP23017::digitalWrite(uint8_t pin, uint8_t state)
 {
-	MCP23017_REGISTER gpioreg = GPIOA;
-	byte gpio;
+	MCP23017_REGISTER gpioreg = MCP23017_REGISTER::GPIOA;
+	uint8_t gpio;
 	if(pin > 7)
 	{
-		gpioreg = GPIOB;
+		gpioreg = MCP23017_REGISTER::GPIOB;
 		pin -= 8;
 	}
 
@@ -60,13 +60,13 @@ void MCP23017::digitalWrite(byte pin, byte state)
 	writeRegister(gpioreg, gpio);
 }
 
-byte MCP23017::digitalRead(byte pin)
+uint8_t MCP23017::digitalRead(uint8_t pin)
 {
-	MCP23017_REGISTER gpioreg = GPIOA;
-	byte gpio;
+	MCP23017_REGISTER gpioreg = MCP23017_REGISTER::GPIOA;
+	uint8_t gpio;
 	if(pin > 7)
 	{
-		gpioreg = GPIOB;
+		gpioreg = MCP23017_REGISTER::GPIOB;
 		pin -=8;
 	}
 
@@ -75,62 +75,62 @@ byte MCP23017::digitalRead(byte pin)
 	return LOW;
 }
 
-void MCP23017::writePort(byte port, byte value)
+void MCP23017::writePort(MCP23017_PORT port, uint8_t value)
 {
-	writeRegister(GPIOA + port, value);
+	writeRegister(MCP23017_REGISTER::GPIOA + port, value);
 }
 
-void MCP23017::write(short value)
+void MCP23017::write(uint16_t value)
 {
-	writeRegister(GPIOA, lowByte(value), highByte(value));
+	writeRegister(MCP23017_REGISTER::GPIOA, lowByte(value), highByte(value));
 }
 
-byte MCP23017::readPort(byte port)
+uint8_t MCP23017::readPort(MCP23017_PORT port)
 {
-	return readRegister(GPIOA + port);
+	return readRegister(MCP23017_REGISTER::GPIOA + port);
 }
 
-short MCP23017::read()
+uint16_t MCP23017::read()
 {
-	byte a = readPort(0);
-	byte b = readPort(1);
+	uint8_t a = readPort(MCP23017_PORT::A);
+	uint8_t b = readPort(MCP23017_PORT::B);
 
 	return a | b << 8;
 }
 
-void MCP23017::writeRegister(MCP23017_REGISTER reg, byte value)
+void MCP23017::writeRegister(MCP23017_REGISTER reg, uint8_t value)
 {
 	Wire.beginTransmission(_deviceAddr);
-	Wire.write(reg);
+	Wire.write(static_cast<uint8_t>(reg));
 	Wire.write(value);
 	Wire.endTransmission();
 }
 
-void MCP23017::writeRegister(MCP23017_REGISTER reg, byte portA, byte portB)
+void MCP23017::writeRegister(MCP23017_REGISTER reg, uint8_t portA, uint8_t portB)
 {
 	Wire.beginTransmission(_deviceAddr);
-	Wire.write(reg);
+	Wire.write(static_cast<uint8_t>(reg));
 	Wire.write(portA);
 	Wire.write(portB);
 	Wire.endTransmission();
 }
 
 
-byte MCP23017::readRegister(MCP23017_REGISTER reg)
+uint8_t MCP23017::readRegister(MCP23017_REGISTER reg)
 {
 	Wire.beginTransmission(_deviceAddr);
-	Wire.write(reg);
+	Wire.write(static_cast<uint8_t>(reg));
 	Wire.endTransmission();
-	Wire.requestFrom(_deviceAddr, (byte)1);
+	Wire.requestFrom(_deviceAddr, (uint8_t)1);
 	return Wire.read();
 }
 
-void MCP23017::readRegister(MCP23017_REGISTER reg, byte& portA, byte& portB)
+void MCP23017::readRegister(MCP23017_REGISTER reg, uint8_t& portA, uint8_t& portB)
 {
 	Wire.beginTransmission(_deviceAddr);
-	Wire.write(reg);
+	Wire.write(static_cast<uint8_t>(reg));
 	Wire.endTransmission();
-	Wire.requestFrom(_deviceAddr, (byte)2);
+	Wire.requestFrom(_deviceAddr, (uint8_t)2);
 	portA = Wire.read();
 	portB = Wire.read();
 }
@@ -139,20 +139,20 @@ void MCP23017::readRegister(MCP23017_REGISTER reg, byte& portA, byte& portB)
 
 void MCP23017::interruptMode(MCP23017_INTMODE intMode)
 {
-	byte iocon = readRegister(IOCON);
-	if(intMode == OR) iocon |= OR;
-	else iocon &= ~(OR);
+	uint8_t iocon = readRegister(MCP23017_REGISTER::IOCON);
+	if(intMode == MCP23017_INTMODE::OR) iocon |= static_cast<uint8_t>(MCP23017_INTMODE::OR);
+	else iocon &= ~(static_cast<uint8_t>(MCP23017_INTMODE::OR));
 
-	writeRegister(IOCON, iocon);
+	writeRegister(MCP23017_REGISTER::IOCON, iocon);
 }
 
-void MCP23017::interrupt(byte port, byte mode)
+void MCP23017::interrupt(MCP23017_PORT port, uint8_t mode)
 {
-	MCP23017_REGISTER defvalreg = DEFVALA + port;
-	MCP23017_REGISTER intconreg = INTCONA + port;
+	MCP23017_REGISTER defvalreg = MCP23017_REGISTER::DEFVALA + port;
+	MCP23017_REGISTER intconreg = MCP23017_REGISTER::INTCONA + port;
 
 	//enable interrupt for port
-	writeRegister(GPINTENA + port, 0xFF);
+	writeRegister(MCP23017_REGISTER::GPINTENA + port, 0xFF);
 	switch(mode)
 	{
 	case CHANGE:
@@ -172,25 +172,25 @@ void MCP23017::interrupt(byte port, byte mode)
 	}
 }
 
-void MCP23017::interruptedBy(byte& portA, byte& portB)
+void MCP23017::interruptedBy(uint8_t& portA, uint8_t& portB)
 {
-	readRegister(INTFA, portA, portB);
+	readRegister(MCP23017_REGISTER::INTFA, portA, portB);
 }
 
-void MCP23017::disableInterrupt(byte port)
+void MCP23017::disableInterrupt(MCP23017_PORT port)
 {
-	writeRegister(GPINTENA + port, 0x00);
+	writeRegister(MCP23017_REGISTER::GPINTENA + port, 0x00);
 }
 
 void MCP23017::clearInterrupts()
 {
-	byte a, b;
+	uint8_t a, b;
 	clearInterrupts(a, b);
 }
 
-void MCP23017::clearInterrupts(byte& portA, byte& portB)
+void MCP23017::clearInterrupts(uint8_t& portA, uint8_t& portB)
 {
-	readRegister(INTCAPA, portA, portB);
+	readRegister(MCP23017_REGISTER::INTCAPA, portA, portB);
 }
 
 #endif
