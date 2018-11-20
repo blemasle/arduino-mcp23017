@@ -1,7 +1,7 @@
 #include "MCP23017.h"
 
-MCP23017::MCP23017(uint8_t addr) {
-	_deviceAddr = addr;
+MCP23017::MCP23017(uint8_t address) {
+	_deviceAddr = address;
 }
 
 MCP23017::~MCP23017() {}
