@@ -19,23 +19,23 @@ void setup() {
     Serial.begin(115200);
     
     mcp.init();
-    mcp.portMode(0, 0);         //Port A as ouput
-    mcp.portMode(1, 0b11111111);//Port B as input
+    mcp.portMode(MCP23017_PORT::A, 0);         //Port A as ouput
+    mcp.portMode(MCP23017_PORT::B, 0b11111111);//Port B as input
 
-    mcp.interruptMode(OR);      
-    mcp.interrupt(1, FALLING);
+    mcp.interruptMode(MCP23017_INTMODE::SEPARATED);      
+    mcp.interrupt(MCP23017_PORT::B, FALLING);
 
-    mcp.writeRegister(GPIOA, 0x00);
-    mcp.writeRegister(GPIOB, 0x00);
+    mcp.writeRegister(MCP23017_REGISTER::GPIOA, 0x00);
+    mcp.writeRegister(MCP23017_REGISTER::GPIOB, 0x00);
 
     mcp.clearInterrupts();
     attachInterrupt(1, userInput, FALLING);
 }
 
 void loop() {
-    byte conf, a, b;
-    byte captureA, captureB;
-    byte currentA, currentB;
+    uint8_t conf, a, b;
+    uint8_t captureA, captureB;
+    uint8_t currentA, currentB;
 
     if(!interrupted) return;
 
@@ -45,10 +45,10 @@ void loop() {
     
     mcp.interruptedBy(a, b);
     mcp.clearInterrupts(captureA, captureB);
-    currentB = mcp.readPort(1);
+    currentB = mcp.readPort(MCP23017_PORT::B);
 
     if((b & ~currentB) == (b & ~captureB)) {
-        byte currentA = mcp.readPort(0);
-        mcp.writeRegister(GPIOA, currentA ^ b);
+        uint8_t currentA = mcp.readPort(MCP23017_PORT::A);
+        mcp.writeRegister(MCP23017_REGISTER::GPIOA, currentA ^ b);
     }
 }
