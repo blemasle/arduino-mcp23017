@@ -1,7 +1,8 @@
 #include "MCP23017.h"
 
-MCP23017::MCP23017(uint8_t address) {
+MCP23017::MCP23017(uint8_t address, TwoWire& bus = Wire) {
 	_deviceAddr = address;
+	_bus = &bus;
 }
 
 MCP23017::~MCP23017() {}
@@ -100,39 +101,39 @@ uint16_t MCP23017::read()
 
 void MCP23017::writeRegister(MCP23017_REGISTER reg, uint8_t value)
 {
-	bus.beginTransmission(_deviceAddr);
-	bus.write(static_cast<uint8_t>(reg));
-	bus.write(value);
-	bus.endTransmission();
+	_bus->beginTransmission(_deviceAddr);
+	_bus->write(static_cast<uint8_t>(reg));
+	_bus->write(value);
+	_bus->endTransmission();
 }
 
 void MCP23017::writeRegister(MCP23017_REGISTER reg, uint8_t portA, uint8_t portB)
 {
-	bus.beginTransmission(_deviceAddr);
-	bus.write(static_cast<uint8_t>(reg));
-	bus.write(portA);
-	bus.write(portB);
-	bus.endTransmission();
+	_bus->beginTransmission(_deviceAddr);
+	_bus->write(static_cast<uint8_t>(reg));
+	_bus->write(portA);
+	_bus->write(portB);
+	_bus->endTransmission();
 }
 
 
 uint8_t MCP23017::readRegister(MCP23017_REGISTER reg)
 {
-	bus.beginTransmission(_deviceAddr);
-	bus.write(static_cast<uint8_t>(reg));
-	bus.endTransmission();
-	bus.requestFrom(_deviceAddr, (uint8_t)1);
-	return bus.read();
+	_bus->beginTransmission(_deviceAddr);
+	_bus->write(static_cast<uint8_t>(reg));
+	_bus->endTransmission();
+	_bus->requestFrom(_deviceAddr, (uint8_t)1);
+	return _bus->read();
 }
 
 void MCP23017::readRegister(MCP23017_REGISTER reg, uint8_t& portA, uint8_t& portB)
 {
-	bus.beginTransmission(_deviceAddr);
-	bus.write(static_cast<uint8_t>(reg));
-	bus.endTransmission();
-	bus.requestFrom(_deviceAddr, (uint8_t)2);
-	portA = bus.read();
-	portB = bus.read();
+	_bus->beginTransmission(_deviceAddr);
+	_bus->write(static_cast<uint8_t>(reg));
+	_bus->endTransmission();
+	_bus->requestFrom(_deviceAddr, (uint8_t)2);
+	portA = _bus->read();
+	portB = _bus->read();
 }
 
 #ifdef _MCP23017_INTERRUPT_SUPPORT_
@@ -194,10 +195,3 @@ void MCP23017::clearInterrupts(uint8_t& portA, uint8_t& portB)
 }
 
 #endif
-void MCP23017::setBus(TwoWire &newBus){
-	bus = newBus;
-}
-
-TwoWire MCP23017::getBus(){
-	return bus;
-}

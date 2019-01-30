@@ -58,13 +58,13 @@ inline MCP23017_REGISTER operator+(MCP23017_REGISTER a, MCP23017_PORT b) {
 class MCP23017
 {
 private:
-	TwoWire bus;
+	TwoWire* _bus;
 	uint8_t _deviceAddr;
 public:
 	/**
 	 * Instantiates a new instance to interact with a MCP23017 at the specified address.
 	 */
-	MCP23017(uint8_t address);
+	MCP23017(uint8_t address, TwoWire& bus = Wire);
 	~MCP23017();
 #ifdef _DEBUG
 	void debug();
@@ -215,7 +215,4 @@ public:
 	void clearInterrupts(uint8_t& portA, uint8_t& portB);
 
 #endif
-	void setBus(TwoWire &bus);
-	
-	TwoWire getBus();
 };
