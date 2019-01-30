@@ -58,6 +58,7 @@ inline MCP23017_REGISTER operator+(MCP23017_REGISTER a, MCP23017_PORT b) {
 class MCP23017
 {
 private:
+	TwoWire bus;
 	uint8_t _deviceAddr;
 public:
 	/**
@@ -214,4 +215,7 @@ public:
 	void clearInterrupts(uint8_t& portA, uint8_t& portB);
 
 #endif
+	void setBus(TwoWire &bus);
+	
+	TwoWire getBus();
 };
