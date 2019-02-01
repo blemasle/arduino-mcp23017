@@ -20,4 +20,5 @@ Unlike most Arduino library, no default instance is created when the library is 
 MCP23017 mcp = MCP23017(0x24);
 ```
 
+Additionaly, you can specify the `Wire` instance to use as a second argument. For instance `MCP23017(0x24, Wire1)`.  
 See included examples for furher usage.
