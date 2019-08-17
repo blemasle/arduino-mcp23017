@@ -1,6 +1,6 @@
 #include "MCP23017.h"
 
-MCP23017::MCP23017(uint8_t address, TwoWire& bus = Wire) {
+MCP23017::MCP23017(uint8_t address, TwoWire& bus) {
 	_deviceAddr = address;
 	_bus = &bus;
 }
