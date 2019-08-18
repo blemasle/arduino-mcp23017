@@ -72,7 +72,7 @@ uint8_t MCP23017::digitalRead(uint8_t pin)
 	}
 
 	gpio = readRegister(gpioreg);
-	if(gpio & _BV(pin) == _BV(pin)) return HIGH;
+	if((gpio & _BV(pin)) == _BV(pin)) return HIGH;
 	return LOW;
 }
 
