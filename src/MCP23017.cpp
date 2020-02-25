@@ -31,7 +31,7 @@ void MCP23017::portMode(MCP23017_PORT port, uint8_t value, bool inverted)
 	}
 }
 
-void MCP23017::pinMode(uint8_t pin, uint8_t mode)
+void MCP23017::pinMode(uint8_t pin, uint8_t mode, bool inverted)
 {
 	MCP23017_REGISTER iodirreg = MCP23017_REGISTER::IODIRA;
 	uint8_t iodir;
@@ -52,7 +52,7 @@ void MCP23017::pinMode(uint8_t pin, uint8_t mode)
 	}
 	pol = readRegister(reg);
 	pol |= _BV(pin);
-	
+
 	writeRegister( reg, pol );
 } 
 
