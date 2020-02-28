@@ -37,23 +37,6 @@ void MCP23017::pinMode(uint8_t pin, uint8_t mode, bool inverted)
 		iodirreg = MCP23017_REGISTER::IODIRB;
 		pin -= 8;
 	}
-	if( inverted && mode == INPUT ){
-
-	MCP23017_REGISTER reg;
-	uint8_t pol;
-
-	if( pin < 8 ) {
-		pol = readRegister(MCP23017_REGISTER::IPOLA);
-	} else {
-		pol = readRegister(MCP23017_REGISTER::IPOLB);
-	}
-	pol = readRegister(reg);
-	pol |= _BV(pin);
-
-	writeRegister( reg, pol );
-} 
-
-
 
 	iodir = readRegister(iodirreg);
 	pol = readRegister(polreg);
