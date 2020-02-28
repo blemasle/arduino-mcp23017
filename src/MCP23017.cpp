@@ -22,13 +22,10 @@ void MCP23017::init()
 	writeRegister(MCP23017_REGISTER::GPPUA, 0xFF, 0xFF);
 }
 
-void MCP23017::portMode(MCP23017_PORT port, uint8_t value, bool inverted)
+void MCP23017::portMode(MCP23017_PORT port, uint8_t dir, uint8_t inverted)
 {
-	writeRegister(MCP23017_REGISTER::IODIRA + port, value);
-
-	if( inverted ){
-		writeRegister(MCP23017_REGISTER::IPOLA + port, value);
-	}
+   writeRegister(MCP23017_REGISTER::IODIRA + port, dir);
+   writeRegister(MCP23017_REGISTER::IPOLA + port, inverted);
 }
 
 void MCP23017::pinMode(uint8_t pin, uint8_t mode, bool inverted)
