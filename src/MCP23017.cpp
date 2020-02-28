@@ -62,7 +62,8 @@ void MCP23017::pinMode(uint8_t pin, uint8_t mode, bool inverted)
 		 iodir |= _BV(pin);
 	}
 
-	writeRegister( iodirreg, iodir );
+	writeRegister(iodirreg, iodir);
+	writeRegister(polreg, pol);
 }
 
 void MCP23017::digitalWrite(uint8_t pin, uint8_t state)
