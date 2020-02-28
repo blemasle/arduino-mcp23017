@@ -85,7 +85,7 @@ public:
 	 * 
 	 * See "3.5.1 I/O Direction register".
 	 */
-	void portMode(MCP23017_PORT port, uint8_t value, bool inverted=false);
+	void portMode(MCP23017_PORT port, uint8_t dir, uint8_t inverted=0x00);
 	/**
 	 * Controls a single pin direction. 
 	 * Pin 0-7 for port A, 8-15 fo port B.
