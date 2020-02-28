@@ -59,7 +59,10 @@ void MCP23017::pinMode(uint8_t pin, uint8_t mode, bool inverted)
 	if(mode == OUTPUT) {
 		iodir &= ~_BV(pin);
 	} else{
-		 iodir |= _BV(pin);
+	iodir |= _BV(pin);
+	
+	if(inverted) pol |= _BV(pin);
+	else pol &= ~_BV(pin);
 	}
 
 	writeRegister(iodirreg, iodir);
