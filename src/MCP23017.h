@@ -3,7 +3,7 @@
 #include <Arduino.h>
 #include <Wire.h>
 
-#define _MCP23017_INTERRUPT_SUPPORT_ ///< Enables support for MCP23017 interrupts.
+#define _MCP23017_INTERRUPT_SUPPORT_  ///< Enables support for MCP23017 interrupts.
 
 enum class MCP23017_PORT : uint8_t
 {
@@ -13,7 +13,7 @@ enum class MCP23017_PORT : uint8_t
 
 /**
  * Controls if the two interrupt pins mirror each other.
- * See "3.6 Interrupt Logic".
+ * <See "3.6 Interrupt Logic".>
  */
 enum class MCP23017_INTMODE : uint8_t
 {
@@ -24,7 +24,7 @@ enum class MCP23017_INTMODE : uint8_t
 /**
  * Registers addresses.
  * The library use addresses for IOCON.BANK = 0.
- * See "3.2.1 Byte mode and Sequential mode".
+ * <See "3.2.1 Byte mode and Sequential mode".>
  */
 enum class MCP23017_REGISTER : uint8_t
 {
@@ -74,6 +74,14 @@ public:
 #endif
 
 	/**
+	 * @brief deprecated, for backward compability only
+	 * 
+	 */
+	inline void init(){
+		begin();
+	}
+
+	/**
 	 * Initializes the chip with the default configuration.
 	 * Enables Byte mode (IOCON.BANK = 0 and IOCON.SEQOP = 1).
 	 * Enables pull-up resistors for all pins by default. 
@@ -84,7 +92,7 @@ public:
 	 * @param pullup_b: bitmask for port B
 	 * See "3.2.1 Byte mode and Sequential mode".
 	 */
-	void begin(uint8_t pullup_a=0xFF, uint8_t pullup_b=0xFF);
+	void begin(uint8_t pullup_a=0x00, uint8_t pullup_b=0x00);
 
 	/**
 	 * Controls the pins direction on a whole port at once.
@@ -99,7 +107,7 @@ public:
 	 * @param inverteds: bitmask for inverted mode
 	 * 
 	 */
-	void portMode(MCP23017_PORT port, uint8_t modes, uint8_t pullups=0xFF, uint8_t inverteds=0x00);
+	void portMode(MCP23017_PORT port, uint8_t modes, uint8_t pullups=0xff, uint8_t inverteds=0x00);
 
 	/**
 	 * Sets a single pins' direction. When the pin is an input pin
@@ -222,6 +230,7 @@ public:
 	 */
 	void interrupt(MCP23017_PORT port, uint8_t mode);
 
+
 	/**
 	 * @brief Disables interrupts for the specified port.
 	 * <See "3.5.3 INTERRUPT-ON-CHANGE CONTROL REGISTER".>
@@ -254,5 +263,5 @@ public:
 	 */
 	void clearInterrupts(uint8_t& portA, uint8_t& portB);
 
-#endif
+#endif //  _MCP23017_INTERRUPT_SUPPORT_
 };

@@ -35,9 +35,6 @@ void MCP23017::pinMode(uint8_t pin, uint8_t mode, bool inverted)
 	MCP23017_REGISTER iodirreg = MCP23017_REGISTER::IODIRA;
 	MCP23017_REGISTER polreg   = MCP23017_REGISTER::IPOLA;
 	MCP23017_REGISTER pullreg  = MCP23017_REGISTER::GPPUA;
-	uint8_t iodir;
-	uint8_t pol;
-	uint8_t pull;
 
 	if(pin > 7)
 	{
@@ -47,29 +44,42 @@ void MCP23017::pinMode(uint8_t pin, uint8_t mode, bool inverted)
 		pin -= 8;
 	}
 
-	iodir = readRegister(iodirreg);
-	pol = readRegister(polreg);
-	pull = readRegister(pullreg);
+	uint8_t iodir = readRegister(iodirreg);
+	uint8_t pol   = readRegister(polreg);
+	uint8_t pull  = readRegister(pullreg);
 
-	if(mode == OUTPUT) {
-		iodir &= ~_BV(pin);
-		pol &= ~_BV(pin);
-	} else{
+	if(mode == OUTPUT) 
+	{
 		iodir |= _BV(pin);
+		pol   &= ~_BV(pin);
+		pull  &= ~_BV(pin);
+	} 
+	else
+	{
+		iodir &= ~_BV(pin);
 		
-		if(mode==INPUT_PULLUP) pull |= _BV(pin);
-		else pull &= ~_BV(pin);
-		
-		if(inverted) pol |= _BV(pin);
-		else pol &= ~_BV(pin);
-	}
+		if(mode==INPUT_PULLUP)
+		{
+			pull |= _BV(pin); 
+		}  
+		else 
+		{
+			pull &= ~_BV(pin);
+		}
 
-	writeRegister(iodirreg, iodir);
-	writeRegister(polreg, pol);
-
-	if(mode==INPUT_PULLUP){
 		writeRegister(pullreg, pull);
+		
+		if(inverted) 
+		{
+			pol |= _BV(pin); 
+		}
+		else
+		{
+			pol &= ~_BV(pin);
+		}
+		writeRegister(polreg, pol);
 	}
+	writeRegister(iodirreg, iodir);
 }
 
 void MCP23017::digitalWrite(uint8_t pin, uint8_t state)
@@ -222,4 +232,4 @@ void MCP23017::clearInterrupts(uint8_t& portA, uint8_t& portB)
 	readRegister(MCP23017_REGISTER::INTCAPA, portA, portB);
 }
 
-#endif
+#endif //  _MCP23017_INTERRUPT_SUPPORT_
