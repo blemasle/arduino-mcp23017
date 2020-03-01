@@ -217,7 +217,7 @@ public:
 	 * If intMode is OR, interrupt pins are OR'ed so an interrupt on one of the port will cause both pints to active.
 	 * <See "3.5.6 I/O EXPANDER CONFIGURATION REGISTER <0x05>".>
 	 * 
-	 * @param intMode  Controls the IOCON.MIRROR bit
+	 * @param intMode  When OR, the INTn pins are functionally OR’ed so that an interrupt on either port will cause both pins to activate. Otherwise use SEPARATED as parameter.
 	 */
 	void interruptMode(MCP23017_INTMODE intMode);
 

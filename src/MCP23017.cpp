@@ -67,7 +67,6 @@ void MCP23017::pinMode(uint8_t pin, uint8_t mode, bool inverted)
 			pull &= ~_BV(pin);
 		}
 
-		writeRegister(pullreg, pull);
 		
 		if(inverted) 
 		{
@@ -77,8 +76,10 @@ void MCP23017::pinMode(uint8_t pin, uint8_t mode, bool inverted)
 		{
 			pol &= ~_BV(pin);
 		}
-		writeRegister(polreg, pol);
 	}
+
+	writeRegister(polreg, pol);
+	writeRegister(pullreg, pull);
 	writeRegister(iodirreg, iodir);
 }
 
