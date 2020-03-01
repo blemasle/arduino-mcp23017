@@ -7,50 +7,69 @@ MCP23017::MCP23017(uint8_t address, TwoWire& bus) {
 
 MCP23017::~MCP23017() {}
 
-void MCP23017::init()
+void MCP23017::begin(uint8_t pullup_a, uint8_t pullup_b)
 {
-	//BANK = 	0 : sequential register addresses
-	//MIRROR = 	0 : use configureInterrupt 
-	//SEQOP = 	1 : sequential operation disabled, address pointer does not increment
-	//DISSLW = 	0 : slew rate enabled
-	//HAEN = 	0 : hardware address pin is always enabled on 23017
-	//ODR = 	0 : open drain output
-	//INTPOL = 	0 : interrupt active low
+	//IOCON.BANK   = 	0 : sequential register addresses
+	//IOCON.MIRROR = 	0 : use configureInterrupt 
+	//IOCON.SEQOP  = 	1 : sequential operation disabled, address pointer does not increment
+	//IOCON.DISSLW = 	0 : slew rate enabled
+	//IOCON.HAEN   = 	0 : hardware address pin is always enabled on 23017
+	//IOCON.ODR    = 	0 : open drain output
+	//IOCON.INTPOL = 	0 : interrupt active low
+	//IOCON bit 0 is spare
 	writeRegister(MCP23017_REGISTER::IOCON, 0b00100000);
 
 	//enable all pull up resistors (will be effective for input pins only)
-	writeRegister(MCP23017_REGISTER::GPPUA, 0xFF, 0xFF);
+	writeRegister(MCP23017_REGISTER::GPPUA, pullup_a, pullup_b);
 }
 
-void MCP23017::portMode(MCP23017_PORT port, uint8_t dir, uint8_t inverted)
+void MCP23017::portMode(MCP23017_PORT port, uint8_t modes, uint8_t pullups, uint8_t inverteds)
 {
-   writeRegister(MCP23017_REGISTER::IODIRA + port, dir);
-   writeRegister(MCP23017_REGISTER::IPOLA + port, inverted);
+   writeRegister(MCP23017_REGISTER::IODIRA + port, modes);
+   writeRegister(MCP23017_REGISTER::IPOLA  + port, inverteds);
+   writeRegister(MCP23017_REGISTER::GPPUA  + port, pullups);
 }
 
 void MCP23017::pinMode(uint8_t pin, uint8_t mode, bool inverted)
 {
 	MCP23017_REGISTER iodirreg = MCP23017_REGISTER::IODIRA;
+	MCP23017_REGISTER polreg   = MCP23017_REGISTER::IPOLA;
+	MCP23017_REGISTER pullreg  = MCP23017_REGISTER::GPPUA;
 	uint8_t iodir;
+	uint8_t pol;
+	uint8_t pull;
+
 	if(pin > 7)
 	{
 		iodirreg = MCP23017_REGISTER::IODIRB;
+		polreg = MCP23017_REGISTER::IPOLB;
+		pullreg = MCP23017_REGISTER::GPPUB;
 		pin -= 8;
 	}
 
 	iodir = readRegister(iodirreg);
 	pol = readRegister(polreg);
+	pull = readRegister(pullreg);
+
 	if(mode == OUTPUT) {
 		iodir &= ~_BV(pin);
+		pol &= ~_BV(pin);
 	} else{
-	iodir |= _BV(pin);
-	
-	if(inverted) pol |= _BV(pin);
-	else pol &= ~_BV(pin);
+		iodir |= _BV(pin);
+		
+		if(mode==INPUT_PULLUP) pull |= _BV(pin);
+		else pull &= ~_BV(pin);
+		
+		if(inverted) pol |= _BV(pin);
+		else pol &= ~_BV(pin);
 	}
 
 	writeRegister(iodirreg, iodir);
 	writeRegister(polreg, pol);
+
+	if(mode==INPUT_PULLUP){
+		writeRegister(pullreg, pull);
+	}
 }
 
 void MCP23017::digitalWrite(uint8_t pin, uint8_t state)
@@ -85,14 +104,14 @@ uint8_t MCP23017::digitalRead(uint8_t pin)
 	return LOW;
 }
 
-void MCP23017::writePort(MCP23017_PORT port, uint8_t value)
+void MCP23017::writePort(MCP23017_PORT port, uint8_t values)
 {
-	writeRegister(MCP23017_REGISTER::GPIOA + port, value);
+	writeRegister(MCP23017_REGISTER::GPIOA + port, values);
 }
 
-void MCP23017::write(uint16_t value)
+void MCP23017::write(uint16_t values)
 {
-	writeRegister(MCP23017_REGISTER::GPIOA, lowByte(value), highByte(value));
+	writeRegister(MCP23017_REGISTER::GPIOA, lowByte(values), highByte(values));
 }
 
 uint8_t MCP23017::readPort(MCP23017_PORT port)
@@ -194,7 +213,7 @@ void MCP23017::disableInterrupt(MCP23017_PORT port)
 
 void MCP23017::clearInterrupts()
 {
-	uint8_t a, b;
+	uint8_t a=0, b=0;
 	clearInterrupts(a, b);
 }
 
