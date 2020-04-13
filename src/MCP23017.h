@@ -95,7 +95,10 @@ public:
 	 *
 	 * See "3.5.1 I/O Direction register".
 	 * 
-	 * Beware! Mode here behave as the standard arduino pinMode :
+	 * Beware!  
+	 * On Arduino platform, INPUT = 0, OUTPUT = 1, which is the inverse
+	 * of the MCP23017 definition where a pin is an input if its IODIR bit is set to 1.
+	 * This library pinMode function behaves like Arduino's standard pinMode for consistency.
 	 * [ OUTPUT | INPUT | INPUT_PULLUP ]
 	 */
 	void pinMode(uint8_t pin, uint8_t mode, bool inverted = false);
