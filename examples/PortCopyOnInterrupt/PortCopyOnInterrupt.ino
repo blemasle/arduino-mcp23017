@@ -1,11 +1,16 @@
 /**
  * When a pin on port B is falling, the same pin on port A is switched.
  * Connect a range of switches to port B and leds on port A to see it happening.
+ * 
+ * Connect digital pin 3 to MCP23017 INTB pin.
+ * You'll also need a small cap (100nF tipically) between the arduino interrupt pin and GND.
  */
 #include <Wire.h>
 #include <MCP23017.h>
 
 #define MCP23017_ADDR 0x20
+#define INT_PIN 3
+
 MCP23017 mcp = MCP23017(MCP23017_ADDR);
 
 volatile bool interrupted = false;
@@ -29,11 +34,13 @@ void setup() {
     mcp.writeRegister(MCP23017_REGISTER::GPIOB, 0x00);
 
     mcp.clearInterrupts();
-    attachInterrupt(1, userInput, FALLING);
+
+    pinMode(INT_PIN, INPUT_PULLUP);
+    attachInterrupt(digitalPinToInterrupt(INT_PIN), userInput, FALLING);
 }
 
 void loop() {
-    uint8_t conf, a, b;
+    uint8_t a, b;
     uint8_t captureA, captureB;
     uint8_t currentA, currentB;
 
@@ -50,11 +57,14 @@ void loop() {
     interrupted = false;
     
     mcp.interruptedBy(a, b);
+    // this is the state of the port the moment the interrupt was triggered
     mcp.clearInterrupts(captureA, captureB);
+    // this is the state of the B port right now, after the delay to act as debouncing
     currentB = mcp.readPort(MCP23017_PORT::B);
 
     if((b & ~currentB) == (b & ~captureB)) {
-        uint8_t currentA = mcp.readPort(MCP23017_PORT::A);
+        // the pin that triggered the interrupt is still in the same state after the deboucing delay
+        currentA = mcp.readPort(MCP23017_PORT::A);
         mcp.writeRegister(MCP23017_REGISTER::GPIOA, currentA ^ b);
     }
 }

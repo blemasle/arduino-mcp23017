@@ -1,7 +1,7 @@
 /**
  * On every loop, the state of the port B is copied to port A.
  *
- * Use active low inputs on port A. Internal pullups are configured so there is no need for external resistors.
+ * Use active low inputs on port A. Internal pullups are enabled by default by the library so there is no need for external resistors.
  * Place LEDS on port B for instance. 
  * When pressing a button, the corresponding led is shut down.
  * 
@@ -23,9 +23,6 @@ void setup() {
 
     mcp.writeRegister(MCP23017_REGISTER::GPIOA, 0x00);  //Reset port A 
     mcp.writeRegister(MCP23017_REGISTER::GPIOB, 0x00);  //Reset port B
-    
-    mcp.writeRegister(MCP23017_REGISTER::GPPUA, 0x00);  //No pullups on port A
-    mcp.writeRegister(MCP23017_REGISTER::GPPUB, 0xFF);  //Pullups on port B    
 
     // GPIOB reflects the same logic as the input pins state
     mcp.writeRegister(MCP23017_REGISTER::IPOLB, 0x00);
