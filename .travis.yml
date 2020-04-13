@@ -1,8 +1,14 @@
 language: c
 env:
   global:
-    - ARDUINO_IDE_VERSION="1.8.5"
+    - ARDUINO_IDE_VERSION="1.8.12"
+    - ARDUINO_SAMD_VERSION="1.8.6"
+    - STM32_STM32_VERSION="1.8.0"
     - LIBRARY_NAME="MCP23017"
+  matrix:
+    - BOARD="arduino:avr:uno" CORE="" CORE_URL=""
+    - BOARD="arduino:samd:nano_33_iot" CORE="arduino:samd:$ARDUINO_SAMD_VERSION" CORE_URL=""
+    - BOARD="STM32:stm32:Nucleo_64" CORE="STM32:stm32:$STM32_STM32_VERSION" CORE_URL="https://github.com/stm32duino/BoardManagerFiles/raw/master/STM32/package_stm_index.json"
 before_install:
   - "/sbin/start-stop-daemon --start --quiet --pidfile /tmp/custom_xvfb_1.pid --make-pidfile --background --exec /usr/bin/Xvfb -- :1 -ac -screen 0 1280x1024x16"
   - sleep 3
@@ -11,11 +17,14 @@ before_install:
   - tar xf arduino-$ARDUINO_IDE_VERSION-linux64.tar.xz
   - sudo mv arduino-$ARDUINO_IDE_VERSION /usr/local/share/arduino
   - sudo ln -s /usr/local/share/arduino/arduino /usr/local/bin/arduino
+  - if [ $CORE_URL ]; then arduino --pref boardsmanager.additional.urls=$CORE_URL --save-prefs; fi
+  - if [ $CORE ]; then arduino --install-boards $CORE; fi
 install:
  - ln -s $PWD /usr/local/share/arduino/libraries/$LIBRARY_NAME
 script:
- - arduino --verify --board arduino:avr:uno $PWD/examples/PortCopyOnInterrupt/PortCopyOnInterrupt.ino
- - arduino --verify --board arduino:avr:uno $PWD/examples/RegistersDumper/RegistersDumper.ino
+ - arduino --verify --board $BOARD $PWD/examples/RegistersDumper/PortCopy.ino
+ - arduino --verify --board $BOARD $PWD/examples/PortCopyOnInterrupt/PortCopyOnInterrupt.ino
+ - arduino --verify --board $BOARD $PWD/examples/RegistersDumper/RegistersDumper.ino 
 notifications:
   email:
     on_success: change
