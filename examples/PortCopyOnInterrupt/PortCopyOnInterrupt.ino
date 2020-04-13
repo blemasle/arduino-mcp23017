@@ -30,6 +30,9 @@ void setup() {
     mcp.interruptMode(MCP23017_INTMODE::SEPARATED);      
     mcp.interrupt(MCP23017_PORT::B, FALLING);
 
+    mcp.writeRegister(MCP23017_REGISTER::IPOLA, 0x00);
+    mcp.writeRegister(MCP23017_REGISTER::IPOLB, 0x00);
+
     mcp.writeRegister(MCP23017_REGISTER::GPIOA, 0x00);
     mcp.writeRegister(MCP23017_REGISTER::GPIOB, 0x00);
 
