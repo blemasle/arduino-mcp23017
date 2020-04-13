@@ -1,6 +1,6 @@
 /**
  * When a pin on port B is falling, the same pin on port A is switched.
- * Connect a range of switches to port B and leds on port A to see it happeing.
+ * Connect a range of switches to port B and leds on port A to see it happening.
  */
 #include <Wire.h>
 #include <MCP23017.h>
@@ -19,8 +19,8 @@ void setup() {
     Serial.begin(115200);
     
     mcp.init();
-    mcp.portMode(MCP23017_PORT::A, 0);         //Port A as ouput
-    mcp.portMode(MCP23017_PORT::B, 0b11111111);//Port B as input
+    mcp.portMode(MCP23017_PORT::A, 0);          //Port A as output
+    mcp.portMode(MCP23017_PORT::B, 0b11111111); //Port B as input
 
     mcp.interruptMode(MCP23017_INTMODE::SEPARATED);      
     mcp.interrupt(MCP23017_PORT::B, FALLING);

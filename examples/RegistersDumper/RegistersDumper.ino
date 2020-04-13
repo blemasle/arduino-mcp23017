@@ -1,7 +1,7 @@
 #include <Arduino.h>
 #include <MCP23017.h>
 
-MCP23017 mcp = MCP23017(0x24);
+MCP23017 mcp = MCP23017(0x20);
 
 void setup() {
     Wire.begin();

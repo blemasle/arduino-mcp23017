@@ -166,7 +166,7 @@ void MCP23017::interrupt(MCP23017_PORT port, uint8_t mode)
 		writeRegister(defvalreg, 0xFF);
 		break;
 	case RISING:
-		//interrupt falling : compared against defval, 0x00
+		//interrupt rising : compared against defval, 0x00
 		writeRegister(intconreg, 0xFF);
 		writeRegister(defvalreg, 0x00);
 		break;
