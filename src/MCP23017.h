@@ -85,7 +85,7 @@ public:
 	 * 
 	 * See "3.5.1 I/O Direction register".
 	 */
-	void portMode(MCP23017_PORT port, uint8_t value);
+	void portMode(MCP23017_PORT port, uint8_t directions, uint8_t pullups = 0xFF, uint8_t inverted = 0x00);
 	/**
 	 * Controls a single pin direction. 
 	 * Pin 0-7 for port A, 8-15 fo port B.
@@ -94,8 +94,11 @@ public:
 	 * 0 = Pin is configured as an output.
 	 *
 	 * See "3.5.1 I/O Direction register".
+	 * 
+	 * Beware! Mode here behave as the standard arduino pinMode :
+	 * [ OUTPUT | INPUT | INPUT_PULLUP ]
 	 */
-	void pinMode(uint8_t pin, uint8_t mode);
+	void pinMode(uint8_t pin, uint8_t mode, bool inverted = false);
 
 	/**
 	 * Writes a single pin state.

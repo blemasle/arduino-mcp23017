@@ -8,6 +8,7 @@ void setup() {
     mcp.init();
 
     Serial.begin(115200);
+	
 	uint8_t conf = mcp.readRegister(MCP23017_REGISTER::IODIRA);
 	Serial.print("IODIRA : ");
 	Serial.print(conf, BIN);
