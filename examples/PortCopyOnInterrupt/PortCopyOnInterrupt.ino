@@ -37,7 +37,13 @@ void loop() {
     uint8_t captureA, captureB;
     uint8_t currentA, currentB;
 
-    if(!interrupted) return;
+    if(!interrupted) 
+    {
+        // just to be sure that arduino and mcp are in the "same state"
+        // regarding interrupts
+        mcp.clearInterrupts();
+        return;
+    }
 
     //debouncing
     delay(100);
