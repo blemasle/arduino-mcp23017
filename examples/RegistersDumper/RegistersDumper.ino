@@ -9,57 +9,57 @@ void setup() {
 
     Serial.begin(115200);
 	
-	uint8_t conf = mcp.readRegister(MCP23017_REGISTER::IODIRA);
-	Serial.print("IODIRA : ");
+	uint8_t conf = mcp.readRegister(MCP23017Register::IODIR_A);
+	Serial.print("IODIR_A : ");
 	Serial.print(conf, BIN);
 	Serial.println();
 	
-	conf = mcp.readRegister(MCP23017_REGISTER::IODIRB);
-	Serial.print("IODIRB : ");
+	conf = mcp.readRegister(MCP23017Register::IODIR_B);
+	Serial.print("IODIR_B : ");
 	Serial.print(conf, BIN);
 	Serial.println();
 
-	conf = mcp.readRegister(MCP23017_REGISTER::IPOLA);
-	Serial.print("IPOLA : ");
+	conf = mcp.readRegister(MCP23017Register::IPOL_A);
+	Serial.print("IPOL_A : ");
 	Serial.print(conf, BIN);
 	Serial.println();
 
-	conf = mcp.readRegister(MCP23017_REGISTER::IPOLB);
-	Serial.print("IPOLB : ");
+	conf = mcp.readRegister(MCP23017Register::IPOL_B);
+	Serial.print("IPOL_B : ");
 	Serial.print(conf, BIN);
 	Serial.println();
 
-	conf = mcp.readRegister(MCP23017_REGISTER::GPINTENA);
-	Serial.print("GPINTENA : ");
+	conf = mcp.readRegister(MCP23017Register::GPINTEN_A);
+	Serial.print("GPINTEN_A : ");
 	Serial.print(conf, BIN);
 	Serial.println();
 
-	conf = mcp.readRegister(MCP23017_REGISTER::GPINTENB);
-	Serial.print("GPINTENB : ");
+	conf = mcp.readRegister(MCP23017Register::GPINTEN_B);
+	Serial.print("GPINTEN_B : ");
 	Serial.print(conf, BIN);
 	Serial.println();
 
-	conf = mcp.readRegister(MCP23017_REGISTER::DEFVALA);
-	Serial.print("DEFVALA : ");
+	conf = mcp.readRegister(MCP23017Register::DEFVAL_A);
+	Serial.print("DEFVAL_A : ");
 	Serial.print(conf, BIN);
 	Serial.println();
 
-	conf = mcp.readRegister(MCP23017_REGISTER::DEFVALB);
-	Serial.print("DEFVALB : ");
+	conf = mcp.readRegister(MCP23017Register::DEFVAL_B);
+	Serial.print("DEFVAL_B : ");
 	Serial.print(conf, BIN);
 	Serial.println();
 
-	conf = mcp.readRegister(MCP23017_REGISTER::INTCONA);
-	Serial.print("INTCONA : ");
+	conf = mcp.readRegister(MCP23017Register::INTCON_A);
+	Serial.print("INTCON_A : ");
 	Serial.print(conf, BIN);
 	Serial.println();
 
-	conf = mcp.readRegister(MCP23017_REGISTER::INTCONB);
-	Serial.print("INTCONB : ");
+	conf = mcp.readRegister(MCP23017Register::INTCON_B);
+	Serial.print("INTCON_B : ");
 	Serial.print(conf, BIN);
 	Serial.println();
 
-	conf = mcp.readRegister(MCP23017_REGISTER::IOCON);
+	conf = mcp.readRegister(MCP23017Register::IOCON);
 	Serial.print("IOCON : ");
 	Serial.print(conf, BIN);
 	Serial.println();
@@ -69,55 +69,56 @@ void setup() {
 	//Serial.print(conf, BIN);
 	//Serial.println();
 
-	conf = mcp.readRegister(MCP23017_REGISTER::GPPUA);
-	Serial.print("GPPUA : ");
+	conf = mcp.readRegister(MCP23017Register::GPPU_A);
+	Serial.print("GPPU_A : ");
 	Serial.print(conf, BIN);
 	Serial.println();
 
-	conf = mcp.readRegister(MCP23017_REGISTER::GPPUB);
-	Serial.print("GPPUB : ");
+	conf = mcp.readRegister(MCP23017Register::GPPU_B);
+	Serial.print("GPPU_B : ");
 	Serial.print(conf, BIN);
 	Serial.println();
 
-	conf = mcp.readRegister(MCP23017_REGISTER::INTFA);
-	Serial.print("INTFA : ");
+	conf = mcp.readRegister(MCP23017Register::INTF_A);
+	Serial.print("INTF_A : ");
 	Serial.print(conf, BIN);
 	Serial.println();
 
-	conf = mcp.readRegister(MCP23017_REGISTER::INTFB);
-	Serial.print("INTFB : ");
+	conf = mcp.readRegister(MCP23017Register::INTF_B);
+	Serial.print("INTF_B : ");
 	Serial.print(conf, BIN);
 	Serial.println();
 
-	conf = mcp.readRegister(MCP23017_REGISTER::INTCAPA);
-	Serial.print("INTCAPA : ");
+	conf = mcp.readRegister(MCP23017Register::INTCAP_A);
+	Serial.print("INTCAP_A : ");
 	Serial.print(conf, BIN);
 	Serial.println();
 
-	conf = mcp.readRegister(MCP23017_REGISTER::INTCAPB);
-	Serial.print("INTCAPB : ");
+	conf = mcp.readRegister(MCP23017Register::INTCAP_B);
+	Serial.print("INTCAP_B : ");
 	Serial.print(conf, BIN);
 	Serial.println();
 
-	conf = mcp.readRegister(MCP23017_REGISTER::GPIOA);
-	Serial.print("GPIOA : ");
+	conf = mcp.readRegister(MCP23017Register::GPIO_A);
+	Serial.print("GPIO_A : ");
 	Serial.print(conf, BIN);
 	Serial.println();
 
-	conf = mcp.readRegister(MCP23017_REGISTER::GPIOB);
-	Serial.print("GPIOB : ");
+	conf = mcp.readRegister(MCP23017Register::GPIO_B);
+	Serial.print("GPIO_B : ");
 	Serial.print(conf, BIN);
 	Serial.println();
 
-	conf = mcp.readRegister(MCP23017_REGISTER::OLATA);
-	Serial.print("OLATA : ");
+	conf = mcp.readRegister(MCP23017Register::OLAT_A);
+	Serial.print("OLAT_A : ");
 	Serial.print(conf, BIN);
 	Serial.println();
 
-	conf = mcp.readRegister(MCP23017_REGISTER::OLATB);
-	Serial.print("OLATB : ");
+	conf = mcp.readRegister(MCP23017Register::OLAT_B);
+	Serial.print("OLAT_B : ");
 	Serial.print(conf, BIN);
 	Serial.println();
+
 	Serial.end();
 }
 

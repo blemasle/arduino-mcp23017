@@ -22,3 +22,14 @@ MCP23017 mcp = MCP23017(0x24);
 
 Additionaly, you can specify the `Wire` instance to use as a second argument. For instance `MCP23017(0x24, Wire1)`.  
 See included examples for further usage.
+
+## Remarks
+Major renames have been performed in v2.0.0 to improve compatibility with a variety of platforms. Existing code *will* break when you update from version v1.x.
+
+| Name in v1.x          | Name in v2.x              |
+|-----------------------|---------------------------|
+| `MCP23017_PORT`       | `MCP23017Port`            |
+| `MCP23017_REGISTER`   | `MCP23017Register`        |
+| `MCP23017_INTMODE`    | `MCP23017InterruptMode`   |
+
+In addition to this, every member of the `MCP23017Register` enum were renamed to avoid possible conflicts with macro definitions. `GPIOA` was renamed to `GPIO_A`, `INTCAPA` to `INTCAP_A` and so on...

@@ -18,21 +18,21 @@ void setup() {
     Serial.begin(115200);
     
     mcp.init();
-    mcp.portMode(MCP23017_PORT::A, 0);          //Port A as output
-    mcp.portMode(MCP23017_PORT::B, 0b11111111); //Port B as input
+    mcp.portMode(MCP23017Port::A, 0);          //Port A as output
+    mcp.portMode(MCP23017Port::B, 0b11111111); //Port B as input
 
-    mcp.writeRegister(MCP23017_REGISTER::GPIOA, 0x00);  //Reset port A 
-    mcp.writeRegister(MCP23017_REGISTER::GPIOB, 0x00);  //Reset port B
+    mcp.writeRegister(MCP23017Register::GPIO_A, 0x00);  //Reset port A 
+    mcp.writeRegister(MCP23017Register::GPIO_B, 0x00);  //Reset port B
 
-    // GPIOB reflects the same logic as the input pins state
-    mcp.writeRegister(MCP23017_REGISTER::IPOLB, 0x00);
+    // GPIO_B reflects the same logic as the input pins state
+    mcp.writeRegister(MCP23017Register::IPOL_B, 0x00);
     // Uncomment this line to invert inputs (press a button to lit a led)
-    //mcp.writeRegister(MCP23017_REGISTER::IPOLB, 0xFF);
+    //mcp.writeRegister(MCP23017Register::IPOL_B, 0xFF);
 }
 
 void loop() {
     uint8_t currentB;
 
-    currentB = mcp.readPort(MCP23017_PORT::B);
-    mcp.writePort(MCP23017_PORT::A, currentB);
+    currentB = mcp.readPort(MCP23017Port::B);
+    mcp.writePort(MCP23017Port::A, currentB);
 }
