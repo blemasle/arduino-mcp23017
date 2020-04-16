@@ -24,17 +24,17 @@ void setup() {
     Serial.begin(115200);
     
     mcp.init();
-    mcp.portMode(MCP23017_PORT::A, 0);          //Port A as output
-    mcp.portMode(MCP23017_PORT::B, 0b11111111); //Port B as input
+    mcp.portMode(MCP23017Port::A, 0);          //Port A as output
+    mcp.portMode(MCP23017Port::B, 0b11111111); //Port B as input
 
-    mcp.interruptMode(MCP23017_INTMODE::SEPARATED);      
-    mcp.interrupt(MCP23017_PORT::B, FALLING);
+    mcp.interruptMode(MCP23017InterruptMode::Separated);      
+    mcp.interrupt(MCP23017Port::B, FALLING);
 
-    mcp.writeRegister(MCP23017_REGISTER::IPOLA, 0x00);
-    mcp.writeRegister(MCP23017_REGISTER::IPOLB, 0x00);
+    mcp.writeRegister(MCP23017Register::IPOL_A, 0x00);
+    mcp.writeRegister(MCP23017Register::IPOL_B, 0x00);
 
-    mcp.writeRegister(MCP23017_REGISTER::GPIOA, 0x00);
-    mcp.writeRegister(MCP23017_REGISTER::GPIOB, 0x00);
+    mcp.writeRegister(MCP23017Register::GPIO_A, 0x00);
+    mcp.writeRegister(MCP23017Register::GPIO_B, 0x00);
 
     mcp.clearInterrupts();
 
@@ -63,11 +63,11 @@ void loop() {
     // this is the state of the port the moment the interrupt was triggered
     mcp.clearInterrupts(captureA, captureB);
     // this is the state of the B port right now, after the delay to act as debouncing
-    currentB = mcp.readPort(MCP23017_PORT::B);
+    currentB = mcp.readPort(MCP23017Port::B);
 
     if((b & ~currentB) == (b & ~captureB)) {
         // the pin that triggered the interrupt is still in the same state after the deboucing delay
-        currentA = mcp.readPort(MCP23017_PORT::A);
-        mcp.writeRegister(MCP23017_REGISTER::GPIOA, currentA ^ b);
+        currentA = mcp.readPort(MCP23017Port::A);
+        mcp.writeRegister(MCP23017Register::GPIO_A, currentA ^ b);
     }
 }
