@@ -11,7 +11,8 @@ This library provides full control over the Microchip's [MCP23017](https://www.m
  * Full interrupt support
 
 ## Usage
-Unlike most Arduino library, no default instance is created when the library is included. It's up to you to create one with the appropriate chip I2C address.
+Unlike most Arduino library, no default instance is created when the library is included. It's up to you to create one using the appropriate I2C address based on  MCP23017 `A0`, `A1` and `A2` pins wirings.
+Available addresses go from `0x20` to `0x27`, allowing up to 8 MCP23017 on the same I2C bus.
 
 ```cpp
 #include <Arduino.h>
