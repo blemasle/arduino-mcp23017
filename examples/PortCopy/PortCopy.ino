@@ -1,8 +1,8 @@
 /**
  * On every loop, the state of the port B is copied to port A.
  *
- * Use active low inputs on port A. Internal pullups are enabled by default by the library so there is no need for external resistors.
- * Place LEDS on port B for instance. 
+ * Use active low inputs on port B. Internal pullups are enabled by default by the library so there is no need for external resistors.
+ * Place LEDS on port A for instance. 
  * When pressing a button, the corresponding led is shut down.
  * 
  * You can also uncomment one line to invert the input (when pressing a button the corresponding led is lit)
