@@ -14,8 +14,11 @@ void MCP23017::init()
 	//SEQOP = 	1 : sequential operation disabled, address pointer does not increment
 	//DISSLW = 	0 : slew rate enabled
 	//HAEN = 	0 : hardware address pin is always enabled on 23017
-	//ODR = 	0 : open drain output
+	//ODR = 	0 : active driver output (INTPOL bit sets the polarity.)
+
 	//INTPOL = 	0 : interrupt active low
+	//UNIMPLMENTED 	0 : unimplemented: Read as ‘0’
+
 	writeRegister(MCP23017Register::IOCON, 0b00100000);
 
 	//enable all pull up resistors (will be effective for input pins only)
