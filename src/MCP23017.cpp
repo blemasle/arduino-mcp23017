@@ -5,6 +5,11 @@ MCP23017::MCP23017(uint8_t address, TwoWire& bus) {
 	_bus = &bus;
 }
 
+MCP23017::MCP23017(TwoWire& bus) {
+	_deviceAddr = MCP23017_I2C_ADDRESS;
+	_bus = &bus;
+}
+
 MCP23017::~MCP23017() {}
 
 void MCP23017::init()
@@ -23,6 +28,12 @@ void MCP23017::init()
 
 	//enable all pull up resistors (will be effective for input pins only)
 	writeRegister(MCP23017Register::GPPU_A, 0xFF, 0xFF);
+}
+
+void MCP23017::begin(uint8_t address)
+{
+	_deviceAddr = address;
+	init();
 }
 
 void MCP23017::portMode(MCP23017Port port, uint8_t directions, uint8_t pullups, uint8_t inverted)

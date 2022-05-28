@@ -3,6 +3,7 @@
 #include <Arduino.h>
 #include <Wire.h>
 
+#define MCP23017_I2C_ADDRESS 0x20    ///< The default I2C address of MCP23017.
 #define _MCP23017_INTERRUPT_SUPPORT_ ///< Enables support for MCP23017 interrupts.
 
 enum class MCP23017Port : uint8_t
@@ -65,10 +66,19 @@ public:
 	 * Instantiates a new instance to interact with a MCP23017 at the specified address.
 	 */
 	MCP23017(uint8_t address, TwoWire& bus = Wire);
+	/**
+	 * Instantiates a new instance to interact with a MCP23017 at the
+	 * MCP23017_I2C_ADDRESS default.
+	 */
+	MCP23017(TwoWire& bus = Wire);
 	~MCP23017();
 #ifdef _DEBUG
 	void debug();
 #endif
+	/**
+	 * May override the I2C address set by the constructor. Implicitly calls init().
+	 */
+	void begin(uint8_t address = MCP23017_I2C_ADDRESS);
 	/**
 	 * Initializes the chip with the default configuration.
 	 * Enables Byte mode (IOCON.BANK = 0 and IOCON.SEQOP = 1).
