@@ -30,6 +30,11 @@ void MCP23017::init()
 	writeRegister(MCP23017Register::GPPU_A, 0xFF, 0xFF);
 }
 
+void MCP23017::begin()
+{
+	init();
+}
+
 void MCP23017::begin(uint8_t address)
 {
 	_deviceAddr = address;

@@ -76,9 +76,13 @@ public:
 	void debug();
 #endif
 	/**
-	 * May override the I2C address set by the constructor. Implicitly calls init().
+	 * Uses the I2C address set during construction. Implicitly calls init().
 	 */
-	void begin(uint8_t address = MCP23017_I2C_ADDRESS);
+	void begin();
+	/**
+	 * Overrides the I2C address set by the constructor. Implicitly calls init().
+	 */
+	void begin(uint8_t address);
 	/**
 	 * Initializes the chip with the default configuration.
 	 * Enables Byte mode (IOCON.BANK = 0 and IOCON.SEQOP = 1).
