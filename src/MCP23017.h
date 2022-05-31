@@ -11,6 +11,26 @@ enum class MCP23017Port : uint8_t
 	B = 1
 };
 
+enum class MCP23017IOPin : uint8_t
+{
+	GPA0 = 0,
+	GPA1,
+	GPA2,
+	GPA3,
+	GPA4,
+	GPA5,
+	GPA6,
+	GPA7,
+	GPB0 = 8,
+	GPB1,
+	GPB2,
+	GPB3,
+	GPB4,
+	GPB5,
+	GPB6,
+	GPB7
+};
+
 /**
  * Controls if the two interrupt pins mirror each other.
  * See "3.6 Interrupt Logic".
