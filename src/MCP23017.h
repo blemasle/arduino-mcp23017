@@ -11,7 +11,7 @@ enum class MCP23017Port : uint8_t
 	B = 1
 };
 
-enum class MCP23017IOPin : uint8_t
+enum class MCP23017Pin : uint8_t
 {
 	GPA0 = 0,
 	GPA1,
