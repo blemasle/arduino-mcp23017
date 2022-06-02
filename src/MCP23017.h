@@ -11,24 +11,26 @@ enum class MCP23017Port : uint8_t
 	B = 1
 };
 
-enum class MCP23017Pin : uint8_t
+struct MCP23017Pin
 {
-	GPA0 = 0,
-	GPA1,
-	GPA2,
-	GPA3,
-	GPA4,
-	GPA5,
-	GPA6,
-	GPA7,
-	GPB0 = 8,
-	GPB1,
-	GPB2,
-	GPB3,
-	GPB4,
-	GPB5,
-	GPB6,
-	GPB7
+	enum Names {
+		GPA0 = 0,
+		GPA1,
+		GPA2,
+		GPA3,
+		GPA4,
+		GPA5,
+		GPA6,
+		GPA7,
+		GPB0 = 8,
+		GPB1,
+		GPB2,
+		GPB3,
+		GPB4,
+		GPB5,
+		GPB6,
+		GPB7
+	};
 };
 
 /**
