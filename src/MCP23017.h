@@ -80,7 +80,8 @@ public:
 	 */
 	void begin();
 	/**
-	 * Overrides the I2C address set by the constructor. Implicitly calls init().
+	 * Overrides the I2C address set by the constructor. Implicitly calls begin().
+
 	 */
 	void begin(uint8_t address);
 	/**
