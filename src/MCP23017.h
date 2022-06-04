@@ -206,8 +206,8 @@ public:
 
 	/**
 	 * Controls how the interrupt pins act with each other.
-	 * If intMode is SEPARATED, interrupt conditions on a port will cause its respective INT pin to active.
-	 * If intMode is OR, interrupt pins are OR'ed so an interrupt on one of the port will cause both pints to active.
+	 * If intMode is Separated, interrupt conditions on a port will cause its respective INT pin to active.
+	 * If intMode is Or, interrupt pins are OR'ed so an interrupt on one of the port will cause both pints to active.
 	 * 
 	 * Controls the IOCON.MIRROR bit. 
 	 * See "3.5.6 Configuration register".
