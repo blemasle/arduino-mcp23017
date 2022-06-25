@@ -12,7 +12,7 @@ MCP23017::MCP23017(TwoWire& bus) {
 
 MCP23017::~MCP23017() {}
 
-void MCP23017::init()
+bool MCP23017::init()
 {
 	//BANK = 	0 : sequential register addresses
 	//MIRROR = 	0 : use configureInterrupt 
@@ -24,21 +24,23 @@ void MCP23017::init()
 	//INTPOL = 	0 : interrupt active low
 	//UNIMPLMENTED 	0 : unimplemented: Read as ‘0’
 
-	writeRegister(MCP23017Register::IOCON, 0b00100000);
+	bool retval = writeRegister(MCP23017Register::IOCON, 0b00100000);
 
 	//enable all pull up resistors (will be effective for input pins only)
-	writeRegister(MCP23017Register::GPPU_A, 0xFF, 0xFF);
+	retval &= writeRegister(MCP23017Register::GPPU_A, 0xFF, 0xFF);
+
+	return retval;
 }
 
-void MCP23017::begin()
+bool MCP23017::begin()
 {
-	init();
+	return init();
 }
 
-void MCP23017::begin(uint8_t address)
+bool MCP23017::begin(uint8_t address)
 {
 	_deviceAddr = address;
-	begin();
+	return begin();
 }
 
 void MCP23017::portMode(MCP23017Port port, uint8_t directions, uint8_t pullups, uint8_t inverted)
@@ -135,21 +137,23 @@ uint16_t MCP23017::read()
 	return a | b << 8;
 }
 
-void MCP23017::writeRegister(MCP23017Register reg, uint8_t value)
+bool MCP23017::writeRegister(MCP23017Register reg, uint8_t value)
 {
 	_bus->beginTransmission(_deviceAddr);
 	_bus->write(static_cast<uint8_t>(reg));
 	_bus->write(value);
-	_bus->endTransmission();
+	uint8_t retval = _bus->endTransmission();
+	return !retval;
 }
 
-void MCP23017::writeRegister(MCP23017Register reg, uint8_t portA, uint8_t portB)
+bool MCP23017::writeRegister(MCP23017Register reg, uint8_t portA, uint8_t portB)
 {
 	_bus->beginTransmission(_deviceAddr);
 	_bus->write(static_cast<uint8_t>(reg));
 	_bus->write(portA);
 	_bus->write(portB);
-	_bus->endTransmission();
+	uint8_t retval = _bus->endTransmission();
+	return !retval;
 }
 
 
@@ -158,18 +162,21 @@ uint8_t MCP23017::readRegister(MCP23017Register reg)
 	_bus->beginTransmission(_deviceAddr);
 	_bus->write(static_cast<uint8_t>(reg));
 	_bus->endTransmission();
+	uint8_t retval = _bus->endTransmission();
 	_bus->requestFrom(_deviceAddr, (uint8_t)1);
 	return _bus->read();
 }
 
-void MCP23017::readRegister(MCP23017Register reg, uint8_t& portA, uint8_t& portB)
+bool MCP23017::readRegister(MCP23017Register reg, uint8_t& portA, uint8_t& portB)
 {
 	_bus->beginTransmission(_deviceAddr);
 	_bus->write(static_cast<uint8_t>(reg));
 	_bus->endTransmission();
+	uint8_t retval = _bus->endTransmission();
 	_bus->requestFrom(_deviceAddr, (uint8_t)2);
 	portA = _bus->read();
 	portB = _bus->read();
+	return !retval;
 }
 
 #ifdef _MCP23017_INTERRUPT_SUPPORT_

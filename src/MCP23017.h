@@ -100,12 +100,12 @@ public:
 	/**
 	 * Uses the I2C address set during construction. Implicitly calls init().
 	 */
-	void begin();
+	bool begin();
 	/**
 	 * Overrides the I2C address set by the constructor. Implicitly calls begin().
 
 	 */
-	void begin(uint8_t address);
+	bool begin(uint8_t address);
 	/**
 	 * Initializes the chip with the default configuration.
 	 * Enables Byte mode (IOCON.BANK = 0 and IOCON.SEQOP = 1).
@@ -113,7 +113,7 @@ public:
 	 * 
 	 * See "3.2.1 Byte mode and Sequential mode".
 	 */
-	void init();
+	bool init();
 	/**
 	 * Controls the pins direction on a whole port at once.
 	 * 
@@ -202,7 +202,7 @@ public:
 	/**
 	 * Writes a single register value.
 	 */
-	void writeRegister(MCP23017Register reg, uint8_t value);
+	bool writeRegister(MCP23017Register reg, uint8_t value);
 	/**
 	 * Writes values to a register pair.
 	 * 
@@ -210,7 +210,7 @@ public:
 	 * you have to supply a portA register address to reg. Otherwise, values
 	 * will be reversed due to the way the MCP23017 works in Byte mode.
 	 */
-	void writeRegister(MCP23017Register reg, uint8_t portA, uint8_t portB);
+	bool writeRegister(MCP23017Register reg, uint8_t portA, uint8_t portB);
 	/**
 	 * Reads a single register value.
 	 */
@@ -222,7 +222,7 @@ public:
 	 * you have to supply a portA register address to reg. Otherwise, values
 	 * will be reversed due to the way the MCP23017 works in Byte mode.
 	 */
-	void readRegister(MCP23017Register reg, uint8_t& portA, uint8_t& portB);
+	bool readRegister(MCP23017Register reg, uint8_t& portA, uint8_t& portB);
 
 #ifdef _MCP23017_INTERRUPT_SUPPORT_
 
