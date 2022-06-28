@@ -161,9 +161,8 @@ uint8_t MCP23017::readRegister(MCP23017Register reg)
 {
 	_bus->beginTransmission(_deviceAddr);
 	_bus->write(static_cast<uint8_t>(reg));
-	_bus->endTransmission();
 	uint8_t retval = _bus->endTransmission();
-	_bus->requestFrom(_deviceAddr, (uint8_t)1);
+	retval &= _bus->requestFrom(_deviceAddr, (uint8_t)1);
 	return _bus->read();
 }
 
@@ -171,9 +170,8 @@ bool MCP23017::readRegister(MCP23017Register reg, uint8_t& portA, uint8_t& portB
 {
 	_bus->beginTransmission(_deviceAddr);
 	_bus->write(static_cast<uint8_t>(reg));
-	_bus->endTransmission();
 	uint8_t retval = _bus->endTransmission();
-	_bus->requestFrom(_deviceAddr, (uint8_t)2);
+	retval &= _bus->requestFrom(_deviceAddr, (uint8_t)2);
 	portA = _bus->read();
 	portB = _bus->read();
 	return !retval;
