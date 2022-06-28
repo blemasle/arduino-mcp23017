@@ -122,7 +122,7 @@ public:
 	 * 
 	 * See "3.5.1 I/O Direction register".
 	 */
-	void portMode(MCP23017Port port, uint8_t directions, uint8_t pullups = 0xFF, uint8_t inverted = 0x00);
+	bool portMode(MCP23017Port port, uint8_t directions, uint8_t pullups = 0xFF, uint8_t inverted = 0x00);
 	/**
 	 * Controls a single pin direction. 
 	 * Pin 0-7 for port A, 8-15 fo port B.
@@ -138,7 +138,7 @@ public:
 	 * This library pinMode function behaves like Arduino's standard pinMode for consistency.
 	 * [ OUTPUT | INPUT | INPUT_PULLUP ]
 	 */
-	void pinMode(uint8_t pin, uint8_t mode, bool inverted = false);
+	bool pinMode(uint8_t pin, uint8_t mode, bool inverted = false);
 
 	/**
 	 * Writes a single pin state.
@@ -149,7 +149,7 @@ public:
 	 * 
 	 * See "3.5.10 Port register".
 	 */
-	void digitalWrite(uint8_t pin, uint8_t state);
+	bool digitalWrite(uint8_t pin, uint8_t state);
 	/**
 	 * Reads a single pin state.
 	 * Pin 0-7 for port A, 8-15 for port B.
@@ -169,7 +169,7 @@ public:
 	 * 
 	 * See "3.5.10 Port register".
 	 */
-	void writePort(MCP23017Port port, uint8_t value);
+	bool writePort(MCP23017Port port, uint8_t value);
 	/**
 	 * Writes pins state to both ports.
 	 * 
@@ -178,7 +178,7 @@ public:
 	 * 
 	 * See "3.5.10 Port register".
 	 */
-	void write(uint16_t value);
+	bool write(uint16_t value);
 
 	/**
 	 * Reads pins state for a whole port.
@@ -234,28 +234,28 @@ public:
 	 * Controls the IOCON.MIRROR bit. 
 	 * See "3.5.6 Configuration register".
 	 */
-	void interruptMode(MCP23017InterruptMode intMode);
+	bool interruptMode(MCP23017InterruptMode intMode);
 	/**
 	 * Configures interrupt registers using an Arduino-like API.
 	 * mode can be one of CHANGE, FALLING or RISING.
 	 */
-	void interrupt(MCP23017Port port, uint8_t mode);
+	bool interrupt(MCP23017Port port, uint8_t mode);
 	/**
 	 * Disable interrupts for the specified port.
 	 */
-	void disableInterrupt(MCP23017Port port);
+	bool disableInterrupt(MCP23017Port port);
 	/**
 	 * Reads which pin caused the interrupt.
 	 */
-	void interruptedBy(uint8_t& portA, uint8_t& portB);
+	bool interruptedBy(uint8_t& portA, uint8_t& portB);
 	/**
 	 * Clears interrupts on both ports.
 	 */
-	void clearInterrupts();
+	bool clearInterrupts();
 	/**
 	 * Clear interrupts on both ports. Returns port values at the time the interrupt occured.
 	 */
-	void clearInterrupts(uint8_t& portA, uint8_t& portB);
+	bool clearInterrupts(uint8_t& portA, uint8_t& portB);
 
 #endif
 };

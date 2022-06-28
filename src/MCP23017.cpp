@@ -43,14 +43,15 @@ bool MCP23017::begin(uint8_t address)
 	return begin();
 }
 
-void MCP23017::portMode(MCP23017Port port, uint8_t directions, uint8_t pullups, uint8_t inverted)
+bool MCP23017::portMode(MCP23017Port port, uint8_t directions, uint8_t pullups, uint8_t inverted)
 {
-	writeRegister(MCP23017Register::IODIR_A + port, directions);
-	writeRegister(MCP23017Register::GPPU_A + port, pullups);
-	writeRegister(MCP23017Register::IPOL_A + port, inverted);
+	bool retVal = writeRegister(MCP23017Register::IODIR_A + port, directions);
+	retVal &= writeRegister(MCP23017Register::GPPU_A + port, pullups);
+	retVal &= writeRegister(MCP23017Register::IPOL_A + port, inverted);
+	return retVal;
 }
 
-void MCP23017::pinMode(uint8_t pin, uint8_t mode, bool inverted)
+bool MCP23017::pinMode(uint8_t pin, uint8_t mode, bool inverted)
 {
 	MCP23017Register iodirreg = MCP23017Register::IODIR_A;
 	MCP23017Register pullupreg = MCP23017Register::GPPU_A;
@@ -77,12 +78,13 @@ void MCP23017::pinMode(uint8_t pin, uint8_t mode, bool inverted)
 	if(inverted) bitSet(pol, pin);
 	else bitClear(pol, pin);
 
-	writeRegister(iodirreg, iodir);
-	writeRegister(pullupreg, pull);
-	writeRegister(polreg, pol);
+	bool retVal = writeRegister(iodirreg, iodir);
+	retVal &= writeRegister(pullupreg, pull);
+	retVal &= writeRegister(polreg, pol);
+	return retVal;
 }
 
-void MCP23017::digitalWrite(uint8_t pin, uint8_t state)
+bool MCP23017::digitalWrite(uint8_t pin, uint8_t state)
 {
 	MCP23017Register gpioreg = MCP23017Register::GPIO_A;
 	uint8_t gpio;
@@ -96,7 +98,7 @@ void MCP23017::digitalWrite(uint8_t pin, uint8_t state)
 	if(state == HIGH) bitSet(gpio, pin);
 	else bitClear(gpio, pin);
 
-	writeRegister(gpioreg, gpio);
+	return writeRegister(gpioreg, gpio);
 }
 
 uint8_t MCP23017::digitalRead(uint8_t pin)
@@ -114,14 +116,14 @@ uint8_t MCP23017::digitalRead(uint8_t pin)
 	return LOW;
 }
 
-void MCP23017::writePort(MCP23017Port port, uint8_t value)
+bool MCP23017::writePort(MCP23017Port port, uint8_t value)
 {
-	writeRegister(MCP23017Register::GPIO_A + port, value);
+	return writeRegister(MCP23017Register::GPIO_A + port, value);
 }
 
-void MCP23017::write(uint16_t value)
+bool MCP23017::write(uint16_t value)
 {
-	writeRegister(MCP23017Register::GPIO_A, lowByte(value), highByte(value));
+	return writeRegister(MCP23017Register::GPIO_A, lowByte(value), highByte(value));
 }
 
 uint8_t MCP23017::readPort(MCP23017Port port)
@@ -179,60 +181,61 @@ bool MCP23017::readRegister(MCP23017Register reg, uint8_t& portA, uint8_t& portB
 
 #ifdef _MCP23017_INTERRUPT_SUPPORT_
 
-void MCP23017::interruptMode(MCP23017InterruptMode intMode)
+bool MCP23017::interruptMode(MCP23017InterruptMode intMode)
 {
 	uint8_t iocon = readRegister(MCP23017Register::IOCON);
 	if(intMode == MCP23017InterruptMode::Or) iocon |= static_cast<uint8_t>(MCP23017InterruptMode::Or);
 	else iocon &= ~(static_cast<uint8_t>(MCP23017InterruptMode::Or));
 
-	writeRegister(MCP23017Register::IOCON, iocon);
+	return writeRegister(MCP23017Register::IOCON, iocon);
 }
 
-void MCP23017::interrupt(MCP23017Port port, uint8_t mode)
+bool MCP23017::interrupt(MCP23017Port port, uint8_t mode)
 {
 	MCP23017Register defvalreg = MCP23017Register::DEFVAL_A + port;
 	MCP23017Register intconreg = MCP23017Register::INTCON_A + port;
 
 	//enable interrupt for port
-	writeRegister(MCP23017Register::GPINTEN_A + port, 0xFF);
+	bool retVal = writeRegister(MCP23017Register::GPINTEN_A + port, 0xFF);
 	switch(mode)
 	{
 	case CHANGE:
 		//interrupt on change
-		writeRegister(intconreg, 0);
+		retVal &= writeRegister(intconreg, 0);
 		break;
 	case FALLING:
 		//interrupt falling : compared against defval, 0xff
-		writeRegister(intconreg, 0xFF);
-		writeRegister(defvalreg, 0xFF);
+		retVal &= writeRegister(intconreg, 0xFF);
+		retVal &= writeRegister(defvalreg, 0xFF);
 		break;
 	case RISING:
 		//interrupt rising : compared against defval, 0x00
-		writeRegister(intconreg, 0xFF);
-		writeRegister(defvalreg, 0x00);
+		retVal &= writeRegister(intconreg, 0xFF);
+		retVal &= writeRegister(defvalreg, 0x00);
 		break;
 	}
+	return retVal;
 }
 
-void MCP23017::interruptedBy(uint8_t& portA, uint8_t& portB)
+bool MCP23017::interruptedBy(uint8_t& portA, uint8_t& portB)
 {
-	readRegister(MCP23017Register::INTF_A, portA, portB);
+	return readRegister(MCP23017Register::INTF_A, portA, portB);
 }
 
-void MCP23017::disableInterrupt(MCP23017Port port)
+bool MCP23017::disableInterrupt(MCP23017Port port)
 {
-	writeRegister(MCP23017Register::GPINTEN_A + port, 0x00);
+	return writeRegister(MCP23017Register::GPINTEN_A + port, 0x00);
 }
 
-void MCP23017::clearInterrupts()
+bool MCP23017::clearInterrupts()
 {
 	uint8_t a, b;
-	clearInterrupts(a, b);
+	return clearInterrupts(a, b);
 }
 
-void MCP23017::clearInterrupts(uint8_t& portA, uint8_t& portB)
+bool MCP23017::clearInterrupts(uint8_t& portA, uint8_t& portB)
 {
-	readRegister(MCP23017Register::INTCAP_A, portA, portB);
+	return readRegister(MCP23017Register::INTCAP_A, portA, portB);
 }
 
 #endif
