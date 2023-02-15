@@ -27,7 +27,7 @@ void MCP23017::init()
 	writeRegister(MCP23017Register::IOCON, 0b00100000);
 
 	//enable all pull up resistors (will be effective for input pins only)
-	writeRegister(MCP23017Register::GPPU_A, 0xFF, 0xFF);
+	//writeRegister(MCP23017Register::GPPU_A, 0xFF, 0xFF);
 }
 
 void MCP23017::begin()
