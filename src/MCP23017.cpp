@@ -25,9 +25,6 @@ void MCP23017::init()
 	//UNIMPLMENTED 	0 : unimplemented: Read as ‘0’
 
 	writeRegister(MCP23017Register::IOCON, 0b00100000);
-
-	//enable all pull up resistors (will be effective for input pins only)
-	//writeRegister(MCP23017Register::GPPU_A, 0xFF, 0xFF);
 }
 
 void MCP23017::begin()
