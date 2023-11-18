@@ -24,7 +24,11 @@ MCP23017 mcp = MCP23017(0x24);
 Additionaly, you can specify the `Wire` instance to use as a second argument. For instance `MCP23017(0x24, Wire1)`.  
 See included examples for further usage.
 
-## Remarks
+## Warning about GPA7 & GPB7
+
+GPA7 or GPB7 should not be used as inputs despite what the configuration registers allow. As [stated by Microchip](https://microchip.my.site.com/s/article/GPA7---GPB7-Cannot-Be-Used-as-Inputs-In-MCP23017), it can lead to SDA signal corruption or even malfunction in the host bus under some conditions.
+
+## Breaking changes in v2.0.0
 Major renames have been performed in v2.0.0 to improve compatibility with a variety of platforms. Existing code *will* break when you update from version v1.x.
 
 | Name in v1.x          | Name in v2.x              |
